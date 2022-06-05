@@ -1,0 +1,73 @@
+\documentclass[letterpaper,12pt]{book}
+
+\usepackage{ctex}
+\usepackage{titlesec}
+% 每节换新页
+% \newcommand{\sectionbreak}{\newpage}
+% \usepackage[utf8]{inputenc}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[sectionbib]{chapterbib} % 分章节参考文献
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{xeCJK}
+\usepackage{color}
+\usepackage{hyperref}
+% \usepackage[colorlinks,
+% linkcolor=magenta,
+% anchorcolor=red,
+% citecolor=blue]{hyperref}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{shortvrb}
+\usepackage{stfloats}
+\usepackage{bigstrut}
+% \usepackage{wallpaper} %使用wallpaper宏包
+% \CenterWallPaper{}{img/paper}
+\usepackage{geometry}
+\MakeShortVerb{|}
+\setCJKmainfont[BoldFont=simhei.ttf,ItalicFont=simfang.ttf]{simsun.ttc}
+
+
+\title{\Huge{\textbf{读\ 书\ 笔\ 记}} \\ \vspace{0.5cm} \huge{Book Notes}}
+\author{郭浩}
+\date{2021年12月6日-\today}
+
+\begin{document}
+
+\setlength{\parindent}{0em} 
+\setlength{\parskip}{0.5\baselineskip}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\frontmatter
+
+\maketitle
+
+\tableofcontents
+
+\mainmatter
+
+
+\part{数学与信息科学}
+\input{books/Machine learning}
+
+\input{books/Nature methods}
+
+\part{物质科学}
+\input{books/The emperor's new mind}
+
+\input{books/Scale}
+
+\part{生命科学}
+
+\part{地球科学}
+\input{books/Hi I'm China}
+\input{books/Geographic Information Science and Systems}
+
+\part{人文与艺术}
+
+\part{认知与社会科学}
+\input{books/A PhD is not enough}
+
+\end{document}

@@ -10,7 +10,7 @@
 \par 任务分类：
 \begin{itemize}
     \item 节点级(Node level)：节点分类
-    \item 链接级(Link level)：链接预测（是否有边，如知识图谱补全，推荐系统中预测用户与物品的连接）
+    \item 链接级(Link level)：链接预测（根据已知边预测其它节点对是否连边，如知识图谱补全，推荐系统中预测用户与物品的连接）
     \item 子图级(Subgraph level)：社区探测
     \item 图级(Graph level)：图分类（如分子性质预测），图生成，图演化模拟
 \end{itemize}
@@ -23,9 +23,11 @@
 
 \section{传统方法}
 
-\par 传统图机器学习方法需要人为定义节点、边、图的特征（表示为向量）用于训练。
+\par 传统图机器学习方法需要人为定义节点、节点对、图的特征（表示为向量）用于训练。
 
 \subsection{节点特征}
+
+度、中心性描述节点的重要性。度、聚集系数、图元度向量描述节点所在局部的拓扑属性。
 
 \par \textbf{度}(degree).
 
@@ -36,12 +38,40 @@
 \end{equation}
 其中$A$为无向图的邻接矩阵。上式化为$\lambda \mathbf{c}=A\mathbf{c}$，即$\mathbf{c}$为$A$的特征向量。一般取最大特征值对应特征向量\footnote{无向连通图的邻接矩阵不可约。Perron-Frobenius定理指出，不可约非负矩阵最大特征值为正且代数重数为1，从而该特征向量在乘一个常数意义下唯一。}。
 \par 介中心性(betweenness centrality)：对节点$v$，定义为一对节点所有最短路径中包含$v$的路径所占比例，对所有不含$v$的节点对求和。
-\par 接近中心性(closeness centrality);
+\par 接近中心性(closeness centrality)：对给定节点，定义为该节点到其余节点最短路径长度之和的倒数。
+
+\par \textbf{聚集系数}(clustering coefficient)：对节点$v$，考虑其邻接节点（设有$k_v$个）的导出子图，其边数与$\binom{k_v}{2}$之比。反映邻域连通程度。
+\par \textbf{图元度向量}(graphlet degree vector)：图元即较小的连通有根图。令根节点与给定节点对应，对每个图元统计与之同构的导出子图的数量\footnote{如考虑节点数2-5的图元，得到73维向量。}。事实上度统计$K_2$的数量，聚集系数统计$K_3$的数量。
 
 
-\subsection{边特征}
+\subsection{节点对特征}
+
+\par \textbf{距离}：网络最短距离。
+\par \textbf{局部邻域重叠}：公共邻居数；
+\par Jaccard指数：
+\begin{equation}
+    \frac{\vert N(v_1)\cap N(v_2)\vert}{\vert N(v_1)\cup N(v_2)\vert}
+\end{equation}
+Adamic-Adar指数：
+\begin{equation}
+    \sum_{u\in N(v_1)\cap N(v_2)} \frac{1}{\log k_u}.
+\end{equation}
+局限性是如果没有公共邻居，局部邻域重叠总是0.
+
+\par \textbf{Katz指数}：对简单无向图邻接矩阵乘方，可得到一对节点间给定长度的路径数。设$\beta \in (0,1)$为衰减因子，节点$v_i,v_j$的Katz指数定义为
+\begin{equation}
+    S_{ij}=\sum_{l=1}^\infty \beta^l A^l_{ij}.
+\end{equation}
+矩阵形式为
+\begin{equation}
+    S=\sum_{l=1}^\infty \beta^l A^l=(I-\beta A)^{-1}-I.
+\end{equation}
 
 \subsection{图特征}
+\par \textbf{图核}(graph kernel)给出两个图的相似度: $K(G,G')=\Phi(G)^T \Phi(G')\in \mathbb{R}$.
+\par 图元核(graphlet kernel)：
+
+\par Weisfeiler-Lehman核：
 
 \section{图嵌入}
 

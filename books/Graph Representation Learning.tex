@@ -1,0 +1,54 @@
+
+\chapter{图表示学习}
+\Large\textbf{Graph Representation Learning\footnote{本笔记亦主要参考Jure Leskovec图机器学习讲义(Stanford CS224W，2021)}}
+\par \emph{William L. Hamilton} \normalsize
+
+\section{导论}
+
+\par 图是描述和分析有关联(交互)实体的通用语言。图机器学习的核心问题：如何利用关系结构进行更好的预测？
+
+\par 任务分类：
+\begin{itemize}
+    \item 节点级(Node level)：节点分类
+    \item 链接级(Link level)：链接预测（是否有边，如知识图谱补全，推荐系统中预测用户与物品的连接）
+    \item 子图级(Subgraph level)：社区探测
+    \item 图级(Graph level)：图分类（如分子性质预测），图生成，图演化模拟
+\end{itemize}
+
+\par 二部图的投影图(folded/projected graph)：设两个顶点独立集$U,V$，对$U$的投影图节点为$U$，$u_1,u_2\in U$连边当且仅当存在$v\in V$，$u_1,u_2$在二部图中都与$v$相连。
+
+\par 异质图(heterogeneous graph)：区分不同类型节点和边。 $G=(V,E,R,T)$，边定义为$(v_i,r_{ij},v_j)\in E$, $r_{ij}\in R$是边类型，$T(v_i)$是节点类型。在知识图谱中常用。
+
+\par 稀疏图(sparse graph)：平均度远小于$N-1$。大多数现实世界的网络都是稀疏图。
+
+\section{传统方法}
+
+\par 传统图机器学习方法需要人为定义节点、边、图的特征（表示为向量）用于训练。
+
+\subsection{节点特征}
+
+\par \textbf{度}(degree).
+
+\par \textbf{中心性}(centrality): 衡量节点在图中的重要性。
+\par 特征向量中心性(eigenvector centrality)满足
+\begin{equation}
+    c_v=\frac{1}{\lambda}\sum_{u\in N(v)} c_u.
+\end{equation}
+其中$A$为无向图的邻接矩阵。上式化为$\lambda \mathbf{c}=A\mathbf{c}$，即$\mathbf{c}$为$A$的特征向量。一般取最大特征值对应特征向量\footnote{无向连通图的邻接矩阵不可约。Perron-Frobenius定理指出，不可约非负矩阵最大特征值为正且代数重数为1，从而该特征向量在乘一个常数意义下唯一。}。
+\par 介中心性(betweenness centrality)：对节点$v$，定义为一对节点所有最短路径中包含$v$的路径所占比例，对所有不含$v$的节点对求和。
+\par 接近中心性(closeness centrality);
+
+
+\subsection{边特征}
+
+\subsection{图特征}
+
+\section{图嵌入}
+
+\par 将图的每个节点映射到一个$n$维向量，节点越相似，向量的距离越近。
+
+\section{图神经网络}
+
+\section{图生成模型}
+
+\section{其它主题}

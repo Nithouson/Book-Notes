@@ -68,14 +68,39 @@ Adamic-Adar指数：
 \end{equation}
 
 \subsection{图特征}
-\par \textbf{图核}(graph kernel)给出两个图的相似度: $K(G,G')=\Phi(G)^T \Phi(G')\in \mathbb{R}$.
-\par 图元核(graphlet kernel)：
+\par 图核(graph kernel)给出两个图的相似度: $K(G,G')=\Phi(G)^T \Phi(G')\in \mathbb{R}$.
+\par \textbf{图元核}(graphlet kernel)：计数图中图元的个数，这里的图元是无根图，且不一定连通。$K(G,G')=h_G^T h_{G'}$，其中$h_G$是$G$的图元计数向量（用各分量之和归一化）。由于子图同构(subgraph isomorphism)是NP完全问题，此方法计算复杂度过高。
 
-\par Weisfeiler-Lehman核：
+\par \textbf{Weisfeiler-Lehman核}：采用颜色调整法(color refinement)，初始所有节点赋相同颜色$c_0(v)$；每一步根据当前节点和邻接节点颜色Hash到一个新的颜色：
+\begin{equation}
+    c_{k+1}(v)=\text{HASH}(\{c_k(v),\{c_k(u)\}_{u\in N(v)}\}),
+\end{equation}
+从而$c_k(v)$汇总了$v$的$k$跳邻域中的信息。Weisfeiler-Lehman核的特征向量是$k$步后各颜色节点的计数向量，\emph{该向量也作为图同构的判别依据}，计算复杂度为$O(\vert E \vert)$.
 
 \section{图嵌入}
 
-\par 将图的每个节点映射到一个$n$维向量，节点越相似，向量的距离越近。
+\subsection{节点表示}
+\par 将图的每个节点映射到一个低维向量，使向量的相似度反映对应节点在图中的相似度。这一过程可取代人工设计的特征，自动提取的表示向量可用于多种下游任务。
+
+\par 从编码-解码的角度看，编码器将一个节点映射为一个$d$维表示向量，解码器从两个向量得到对应节点的相似度（如向量点乘）。简单的编码器可以仅做“查表”，即学习一个$d\times N$矩阵，每一列为对应节点的表示向量。
+
+\par 不考虑节点特征，\textbf{随机游走法}将两个节点的相似度定义为它们在一次图上的随机游走中共现的概率。给定随机游走策略$R$，从节点$u$出发进行固定（较短）长度的随机游走，访问节点的多重集记为$N_R(u)$；用softmax函数表示概率，采用最大似然目标函数优化节点表示：
+\begin{align}
+\mathcal{L}&=-\sum_{u\in V}\sum_{v \in N_R(u)} \log P(v \vert \mathbf{z}_u)\notag \\
+&=-\sum_{u\in V}\sum_{v \in N_R(u)}\log \frac{\exp(\mathbf{z}_u^T \mathbf{z}_v)}{\sum_{n\in V}\exp(\mathbf{z}_u^T \mathbf{z}_n)}
+\end{align}
+利用负采样(negative sampling)，上式每一项可近似为
+\begin{equation}
+    \log \sigma(\mathbf{z}_u^T \mathbf{z}_v)-\sum_{i=1}^k \log \sigma(\mathbf{z}_u^T \mathbf{z}_{n_i}).
+\end{equation}
+其中$\sigma(\cdot)$为Sigmoid函数；负样本$\{n_i\}_{i=1}^k$以节点度为概率随机抽样；理论上应取不在该游走上的节点，实际出于效率不加此限制；$k$一般取5-20（过少则估计不准确，过多则产生更大负样本偏差）。采用随机梯度下降优化，每一步随机取节点$u$，对$-\sum_{v \in N_R(u)} \log P(v \vert \mathbf{z}_u)$求梯度，更新各表示向量。
+
+\par \textbf{DeepWalk}采用无偏随机游走。\textbf{node2vec}采用有偏随机游走，以达到网络全局信息(DFS)与局部信息(BFS)的平衡：设$p,q$为参数, 若上一步从$v$走到$w$，则当前步骤以概率$1/p$（非归一化概率，下同）回到$v$；以概率1到达$v$的每个其它相邻节点；以概率$1/q$到达$v$的每个距离为2的节点。$p$低则接近于BFS；$q$低则接近于DFS。
+
+\subsection{图（子图）表示}
+\par \textbf{简单加和法}：各节点表示向量求和（求平均）。
+\par \textbf{虚拟节点法}：引入一个虚拟节点代替子图，利用节点表示方法得到子图表示。
+\par \textbf{匿名随机游走}(anonymous random walk)：随机游走序列不记录具体节点，只记录与序列中其它节点相同或相异（如A-B-C-A-C与C-D-B-C-B均为12313）。在图上进行若干次随机游走，用各匿名序列的概率分布作为图的表示。
 
 \section{图神经网络}
 

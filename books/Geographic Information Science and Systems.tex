@@ -1,4 +1,5 @@
 
+
 \chapter{地理信息系统与科学}
 \Large\textbf{Geographic Information Science and Systems}
 \par \emph{Paul A. Longley, Michael F. Goodchild, David J. Maguire, David W. Rhind} \normalsize
@@ -133,10 +134,22 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \section{不确定性}
 
-大多数地理表达不完备，带来不确定性。不确定性(uncertainty)描述数据集内容与其数据表达的现象的差异。不确定性可在概念化(conception)、地理表达(representation)、数据分析(analysis)三个环节中产生并积累。
+\par 大多数地理表达不完备，带来不确定性。不确定性(uncertainty)描述数据集内容与其数据表达的现象的差异，可以作为表达质量的笼统描述，不区分与vagueness, fuzziness, imprecision, inaccuracy等概念的差异。不确定性可在概念化(conception)、地理表达(representation)、数据分析(analysis)三个环节中产生并积累。
 
-\textbf{概念化中的不确定性}：包括地方(place)和属性(attribute)的概念化。
+\par \textbf{概念化中的不确定性}：包括地方(place)和属性(attribute)的概念化。
 \par 地方(place)概念化为带边界的分析单元，但很多情况下地理分析没有自然的单元。Barry Smith区分了两种空间边界：自然具有的(\emph{bona fide})和人为划定的(\emph{fiat})；地理分析中的单元多数是后者。划分同质区域(homogeneous zone)从而最大化区域间异质性，是区域地理学的基本主题。另一种方式是划分功能区(functional zone)使区内交互量最大、区域间交互量最小；或根据设施的影响范围分划。
 \par 属性（类别）标签可能具有主观性、模糊性，模糊逻辑可缓解这一问题，但其隶属度的精确性受争议（仍是主观的）。采用直接或间接的指数代替所描述的现象，也会因二者对应的不完全性产生不确定性。
 
-\textbf{表达中的不确定性}：包括位置和属性的表达。
+\par \textbf{表达中的不确定性}：位置表达中，矢量线的简化有较大自由度；出于减少数据量或隐私保护目的，也将点数据（如个体位置）聚合到面单元。栅格影像中覆盖多种类型土地的像元称为混合像元(mixel)，当分类数目不变，混合像元比例随分辨率提高而减少。
+
+\par \textbf{分析中的不确定性}：计算结果的误差可利用数据误差的度量和分布分析得到，也可采用重复模拟的方法评估。误差的空间结构（空间自相关性质）对GIS分析操作的不确定性有重要影响，使误差对许多操作的影响减小（如计算两点间距离、坡度），也减少了数据集的``自由度''；但当两数据集叠加时，误差可能会较大。利用模拟分析误差的影响时，应考虑误差的空间自相关。
+\par 生态谬误(ecological fallacy)指基于聚合数据对个体特性的不合理推断。分析单元内的异质性会增加生态谬误出现的可能性和严重性。与之相对的是原子谬误(atomistic fallacy)，即认为个体孤立于所处的环境。
+\par 可变面积单元问题(modifiable areal unit problem)：包括尺度效应(scale effect)和分区效应(zoning effect)。双变量相关系数通常随聚合尺度增大而变得更显著（Yule和Kendall发现了一个实例）；多变量分析的尺度效应没有一致、可预测的趋势。1984年Openshaw的研究表明，相关和回归分析中的不同预设结果可通过调整分区方式实现；1812年gerrymander事件是一个现实实例。用地学计算(geocomputation)方法进行区域划分，有助于理解输出的敏感性，但难以得到无可争议的最优解。分析单元的划分方式难以用抽样和统计推断的方法处理。作者提倡依据清晰的假设定义分析单元，并用（反映单元内部异质性的）外部数据源验证划分的合理性。
+
+\par \textbf{不确定性的度量方法}：
+\par 分类变量：混淆矩阵(confusion matrix)，相比于正确率，Kappa指数用随机分类结果进行修正:
+\begin{displaymath}
+\kappa = \frac{\sum_i c_{ii}-\sum_i c_{.i}c_{i .}/c_{..}}{c_{..}-\sum_i c_{. i}c_{i .}/c_{..}}.
+\end{displaymath}
+其中$n$为类别数，.代表求和。分类图中的错误不仅存在于类别标签，还存在于区块边界的位置。
+\par 连续变量：精度(precision)通常指测量结果有效数字的位数（报告结果时应当与实际准确度相对应，不提供更多位数），也用于描述重复测量时结果的变异程度。准确度(accuracy)描述测量结果(均值)与真实值的差异。两者没有必然联系，高精度的结果仍可能是有偏的(biased)。误差的常用度量指标是均方根误差(RMSE)，很多情况下误差符合正态分布。位置的误差可用多元正态分布描述。

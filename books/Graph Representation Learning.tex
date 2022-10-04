@@ -146,7 +146,8 @@ Adamic-Adar指数：
 
 \par 图的表示应具有\textbf{置换不变性}(permutation invariance)； 节点表示应具有\textbf{置换等变性}(permutation equivariance). 输入节点顺序重新排列的邻接矩阵和节点特征矩阵，输出图表示应相同，节点表示矩阵差一个置换（同一节点表示向量相同）. 图神经网络由一系列置换不变、置换等变的层组成. 
 
-\par \textbf{基本框架}：聚合邻域信息以构建节点特征. 节点$v$的0层表示是其特征本身； $k$层表示由其$k$跳邻域信息聚合得到，$k$跳邻域按消息传递方向构成计算图(computation graph). 每层首先平均邻域信息，再通过神经网络，所有节点共享每层的网络参数. 设节点$v$的$k$层表示为$h_v^{(k)}$，
+\subsection{基本框架}
+\par 聚合邻域信息以构建节点特征. 节点$v$的0层表示是其特征本身； $k$层表示由其$k$跳邻域信息聚合得到，$k$跳邻域按消息传递方向构成计算图(computation graph). 每层首先汇总邻域信息，再通过神经网络，所有节点共享每层的网络参数. 以图卷积神经网络(graph convolution network, GCN)为例，设节点$v$的$k$层表示为$h_v^{(k)}$，
 \begin{equation}
     h_v^{(k+1)}=\sigma(W_k\sum_{u\in N(v)}\frac{h_u^{(k)}}{\vert N(v)\vert}+B_k h_v^{(k)}), k=0,1,\dots,K-1
 \end{equation}
@@ -156,9 +157,36 @@ Adamic-Adar指数：
 \end{equation}
 注意到基于邻接关系的消息传递和邻域聚合（池化）是置换等变的；由此定义的图神经网络可以迁移到新的节点和新的图. 对于监督学习任务，可直接利用标签数据进行训练；对于非监督学习任务，可最小化表示向量内积与某种节点相似度（如基于随机游走嵌入的相似度）的差距.
 
-\par \textbf{图卷积神经网络}(graph convolution network, GCN)： 
+\subsection{设计空间}
+\par 包括消息、聚合、层的堆叠、图增强、目标函数五个方面。
+\par \textbf{消息}(message)：对上一层节点表示的处理，如乘权重矩阵。为保持节点自身的上一层表示，通常采用与邻接节点不同的权重矩阵。此外为增强模型表达能力，可以用多层感知机取代单一线性层。
+\begin{equation}
+    m_u^{(l)}=\operatorname{MSG}^{(l)}(h_u^{(l-1)}).
+\end{equation}
+\par \textbf{聚合}(aggregation)：对邻域消息的聚合操作，如平均、求和、求最大。为保持节点自身的上一层表示，通常先聚合邻接节点表示，再与自身的表示求和或连接。
+\begin{equation}
+    h_v^{(l)}=\operatorname{CONCAT}(\operatorname{AGG}(\{m_u^{(l)}\vert u\in N(v)\}), m_v^{(l)}).
+\end{equation}
+消息和聚合构成了GNN的一层， 非线性激活函数可以加在消息或聚合后的表示上. 层中还可加入Batch normalization，Dropout（用在线性变换中）.
+\par \textbf{层的堆叠}：GNN层的顺序堆叠可能带来过平滑(over-smoothing)问题，即不同节点的表示趋于同质。原因是随层数增大，不同节点的多跳邻域出现大量重叠。因此GNN的层数不必过多，应用中层数比所需感受野略大即可。若需要提升模型表达能力，可在GNN层前后加入MLP层用于预处理和后处理；或加入skip connection（可理解为浅层网络和深度网络的集成）.
 
-\par \textbf{与其它神经网络的关系}：CNN可以视为邻域节点数量和排序固定的GNN，$n\times n$卷积对应$n^2$个不同图卷积参数矩阵；Transformer可以视为全连接的词图(word graph)上的GNN.
+\subsection{常见模型}
+\par \textbf{GraphSAGE}：
+\begin{equation}
+    h_v^{(l)}=\sigma(W_l \cdot \operatorname{CONCAT}(h_v^{(l-1)},\operatorname{AGG}(\{h_u^{(l-1)}\vert u\in N(v)\}))).
+\end{equation}
+其中邻域聚合AGG可以是取平均；先过MLP再平均（求最大）；邻接节点随机重排后过LSTM. 对每层得到的表示使用$l_2$归一化。
+\par \textbf{图注意力网络}(Graph Attention Network, GAT)：
+\begin{equation}
+    h_v^{(l)}=\sigma(\sum_{u\in N(v)}\alpha_{vu}W_l h_u^{(l-1)} ).
+\end{equation}
+其中$\alpha_{vu}$代表$u$对$v$的重要性。训练一个注意力函数$a$，使得
+\begin{equation}
+    e_{vu}=a(W_l h_v^{(l-1)},W_l h_u^{(l-1)}),
+\end{equation}
+$e_{vu}$归一化得到$a_{vu}$，使$\sum_{u\in N(v)}a_{vu}=1$. $a$的形式可以自由设定（如输入拼接消息的单隐层神经网络），其参数随权重矩阵$W$一起训练. 使用多头注意力(multi-head attention)时，同时训练多个注意力函数$a_i$，使用每个注意力函数分别计算表示向量$h_v^{(l)}[i]$，最后将表示向量聚合。
+
+\par \textbf{与其它神经网络的关系}：CNN可以视为邻域节点数量和排序固定的GNN，$n\times n$卷积对应$n^2$个不同图卷积参数矩阵；Transformer可以视为全连接的单词图(word graph)上的GNN.
 
 
 \section{图生成模型}

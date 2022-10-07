@@ -1,6 +1,6 @@
 
 
-\chapter{地理信息系统与科学}
+\chapter{地理信息科学与系统}
 \Large\textbf{Geographic Information Science and Systems}
 \par \emph{Paul A. Longley, Michael F. Goodchild, David J. Maguire, David W. Rhind} \normalsize
 
@@ -165,3 +165,22 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 \par GIS的演进：命令行时代，GIS是处理地理数据、产生派生数据的程序（命令）的集合。20世纪80年代末至90年代初，图形用户界面的出现简化了人机交互，高级程序设计语言和API的出现为软件的自定义开发提供了便利，GIS的应用领域大大扩展。近年来互联网服务(web service)成为主流范式，也是云GIS的组成部分。
 
 \par 主要GIS软件：商业软件：Autodesk AutoCAD Map3D, Bentley Map, Esri ArcGIS, Intergraph GeoMedia. 开源软件：Quantum GIS, GRASS, MapServer. 
+
+\section{地理数据建模}
+
+\par ``representation''与``model''意义相近，前者侧重于概念层面，常用于学术探讨，后者偏实践。
+
+\par 数据模型用于在计算机中描述和表达真实世界的一部分，直接决定了可以在数据上进行何种分析操作。数据模型涉及现实世界的三个抽象层次：概念模型、逻辑模型、物理模型。概念模型面向人(human-oriented)；逻辑模型面向实现(implementation-oriented)，通常用图表表示；物理模型是GIS中的真实实现。场、对象属于概念模型；矢量、栅格属于逻辑模型。
+
+\par \textbf{CAD和计算机制图系统中的数据模型}：简单的点、线、面矢量符号，一般用局部坐标而非真实地理坐标，对象不能附加属性(制图系统可加注记)，也无法表达对象间的关系，故不适于地理信息。
+
+\par \textbf{栅格数据模型}：区别于作为对象属性的图片，须有地理参照信息（像元对应地理位置）。常用压缩方法包括游程长度编码(run-length encoding)，块码(block encoding，包括四叉树)，小波(wavelet)等。前两种是无损压缩；小波法是有损压缩，用于JPEG2000标准。
+
+\par \textbf{矢量数据模型}：分为简单要素和拓扑要素。简单要素也称spaghetti，只存储要素坐标，不存储对象关系。拓扑要素要求``逢交必断''，多边形图层需不重叠地填满平面(planar enforcement)，按节点表、弧段表、多边形表组织，弧段表记录左右多边形。拓扑属性有助于验证数据集的完整性，加速基于拓扑关系的查询。网络模型是一种特殊的矢量模型。
+\par 不规则三角网(Triangulated Irregular Network,TIN)遵循拓扑数据结构，存储每个三角形的三个顶点和邻接三角形。TIN的优点是三角形密度可以随空间位置变化；缺点是对异常值敏感（无平滑处理），高程的准确表达需要记录关键特征点（如山峰、山谷）。
+
+\par \textbf{对象数据模型}：核心是一组对象（类）及之间的关系。地理对象集合了实体的几何数据、属性数据和方法，定义了实体的状态和行为。统一建模语言(Unified Modeling Language, UML)常用于描述类之间的关系；计算机辅助软件工程(compter-aided software engineering, CASE)工具可基于图表形式的逻辑模型生成物理模型。
+
+\section{数据采集}
+
+

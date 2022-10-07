@@ -147,7 +147,7 @@ Adamic-Adar指数：
 \par 图的表示应具有\textbf{置换不变性}(permutation invariance)； 节点表示应具有\textbf{置换等变性}(permutation equivariance). 输入节点顺序重新排列的邻接矩阵和节点特征矩阵，输出图表示应相同，节点表示矩阵差一个置换（同一节点表示向量相同）. 图神经网络由一系列置换不变、置换等变的层组成. 
 
 \subsection{基本框架}
-\par 聚合邻域信息以构建节点特征. 节点$v$的0层表示是其特征本身； $k$层表示由其$k$跳邻域信息聚合得到，$k$跳邻域按消息传递方向构成计算图(computation graph). 每层首先汇总邻域信息，再通过神经网络，所有节点共享每层的网络参数. 以图卷积神经网络(graph convolution network, GCN)为例，设节点$v$的$k$层表示为$h_v^{(k)}$，
+\par 聚合邻域信息以构建节点特征. 节点$v$的0层表示是其特征本身； $k$层表示由其$k$跳邻域信息聚合得到，$k$跳邻域按消息传递方向构成计算图(computation graph). 每层首先汇总邻域信息，再通过神经网络，所有节点共享每层的网络参数. 以图卷积神经网络(graph convolutional network, GCN)为例，设节点$v$的$k$层表示为$h_v^{(k)}$，
 \begin{equation}
     h_v^{(k+1)}=\sigma(W_k\sum_{u\in N(v)}\frac{h_u^{(k)}}{\vert N(v)\vert}+B_k h_v^{(k)}), k=0,1,\dots,K-1
 \end{equation}

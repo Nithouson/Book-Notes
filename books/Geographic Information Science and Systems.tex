@@ -181,6 +181,12 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par \textbf{对象数据模型}：核心是一组对象（类）及之间的关系。地理对象集合了实体的几何数据、属性数据和方法，定义了实体的状态和行为。统一建模语言(Unified Modeling Language, UML)常用于描述类之间的关系；计算机辅助软件工程(compter-aided software engineering, CASE)工具可基于图表形式的逻辑模型生成物理模型。
 
-\section{数据采集}
+\section{数据收集}
 
+\par 数据收集(data collection)分为数据采集(data capture)和数据迁移(data transfer)。前者指数据直接输入系统；后者是导入已存在的数字化数据，最常见的方式是通过某种中间格式。地理数据可分为原始数据(primary data)和派生数据(secondary data)，前者专门为GIS项目直接测量得到，如遥感影像、实地测绘（含GNSS、LiDAR）数据；后者为其它目的采集，通常为硬拷贝文件，需要转换到合适的数字格式才能使用，如纸质地形图、相片等。若不计入人力成本，数据收集费用可以占到GIS项目总费用的60\%-85\%。
 
+\par 模拟数据都需要转化为数字化数据才能加入到GIS中，其途径包括扫描、光学字符识别(Optical Character Recognition)、矢量化、立体摄影测量等。\textbf{矢量化}是扫描地图的主要目的之一。手动数字化有点式、流式之分。自动矢量化仍不完善，需要前/后处理，如把虚线边界改为实线、去除盖住边界的注记等。对复杂地图交互（半自动）矢量化更常用。\textbf{摄影测量}与数字化相似，区别是还需要采集高程信息；其产品包括DEM、正射影像、矢量要素及整合得到的三维场景。
+
+\par 数据收集项目需要权衡质量、速度与费用。
+
+\section{空间数据库}

@@ -189,4 +189,13 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par 数据收集项目需要权衡质量、速度与费用。
 
+\par \vspace{8em}
+
 \section{空间数据库}
+\par 相比于文件管理，数据库管理系统(Database Management System, DBMS)的功能优势包括索引、结构化查询语言(Structured/Standard Query Language, SQL)、访问控制、并发处理（事务机制）、备份等。几乎所有大型GIS都使用DBMS技术管理数据。
+
+\par GIS中常用的三类数据库包括关系数据库(Relational DBMS)、对象数据库(Object DBMS)和对象关系数据库(Object-Relational DBMS)。ORDBMS是附加对象处理功能的RDBMS，IBM DB2、Oracle、Microsoft SQL Server都属于此类。
+
+\par 数据库针对空间数据的扩展主要包括空间数据类型、空间对象的运算函数、查询优化器、空间索引等。加入空间扩展的ORDEMS仍不具备完整GIS的分析、制图等功能，往往作为数据与GIS之间的中间工具。SQL的扩展SQL/MM支持了空间数据类型和相关函数。几何对象的运算包括距离、缓冲区、凸包、求交等。
+
+\par Ted Codd提出的若干范式可通过拆分表格实现，以达到减少冗余的目的，查询时需要重新连接。由于大表的连接操作很费时，GIS中图层数据表往往不遵循此类范式。

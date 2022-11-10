@@ -24,7 +24,7 @@
 
 \par 地理知识可区分为关于形式的(form，how it looks)，和关于过程的(process, how it works)。后者可以用于预测，因而更有价值；一般也具有更强的可泛化性。个案式的地理学(idiographic)更关注形式，强调区域特性；普适式的地理学(nomothetic)寻求普适的过程。两者都是必要的，实际问题的解决需要普适过程知识和具体区域知识的结合。 GIS恰恰实现了这种结合，具体信息存储在数据库中，而普适知识由GIS中的分析方法和工具实现；GIS既提供了不同地点间泛化的途径，又顾及了不同地点间独特的语境。
 
-\par \textbf{地理信息系统}是基于计算机的，用于收集、存储、处理、分析、可视化地理信息的工具。从某种意义上说，整个数字世界已经成为一个巨大的、互联的地理信息系统（Twitter, Flickr, 信令和行车轨迹）；GIS的边界变得模糊，几乎人人都是GIS用户。
+\par \textbf{地理信息系统}是基于计算机的，用于收集、存储、处理、分析、可视化地理信息的工具。从某种意义上说，整个数字世界已经成为一个巨大的、互联的地理信息系统（Twitter, Flickr, RFID刷卡，信令和行车轨迹）；GIS的边界变得模糊，几乎人人都是GIS用户。
 
 \par 地理信息系统的组成部分：硬件, 软件, 数据, （组织管理上的）流程, 人, 网络。硬件包括台式机，笔记本、车载设备等；软件可以是开源或商业软件，在本地或云端；大数据指数据量大、结构复杂，超出传统数据管理和处理工具能力。
 
@@ -128,7 +128,7 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par 全球导航卫星系统可用于测量经纬度和高程。确定经纬度需要地平线上至少三颗卫星；确定经纬度和高程需要四颗。GPS的平面定位精度约\SI{10}{\metre}（使用差分GPS可提升至\SI{1}{\metre}）；高程精度约\SI{50}{\metre}。
 
-\par 混搭(mashup)指组合两种或以上互联网服务，实现它们各自不具备的新功能。如将住房列表接口与互联网地图组合，得到住房地图。
+\par 混搭(mashup)指通过位置关联（类似图层叠加）组合两种或以上互联网服务，实现它们各自不具备的新功能。如将住房列表接口与互联网地图组合，得到住房地图。
 
 \par 地理配准(georegistration)可以根据一组参考点拟合变换方程，将未知坐标系的几何数据或图像配准到已知坐标系的图像。
 
@@ -189,7 +189,7 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par 数据收集项目需要权衡质量、速度与费用。
 
-\par \vspace{8em}
+\par \vspace{6em}
 
 \section{空间数据库}
 \par 相比于文件管理，数据库管理系统(Database Management System, DBMS)的功能优势包括索引、结构化查询语言(Structured/Standard Query Language, SQL)、访问控制、并发处理（事务机制）、备份等。几乎所有大型GIS都使用DBMS技术管理数据。
@@ -205,3 +205,19 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 \par \textbf{索引}一方面可以避免全表扫描，加快查询效率，另一方面其建立、维护费时（特别是更新频繁的数据库），且占据空间大。空间要素索引的三种常见方法是格网、四叉树和R树。\textbf{格网索引}记录每个网格中的要素列表，一般三层级的格网能够满足需求。\textbf{四叉树}(quadtree)是一类将平面递归分为四个象限的索引的总称，包括点四叉树、区域四叉树等。区域四叉树常用于索引线、面、栅格，经过四叉树编码，数据可通过B树索引。\textbf{R树}利用要素的最小外包矩形(Minimum Bounding Rectangle,  MBR)将要素分组，索引性能较好，但更新比格网、四叉树费时。
 
 \par 大多数数据库中的事务是短事务，通过加锁进行并发控制（消极并发策略, pessimistic locking）；空间数据库中的编辑、更新可能耗时很长，需要通过版本控制（积极并发策略, optimistic versioning）支持长事务，即为同时产生的更新分配不同的版本，分别记录每个版本的修改，待编辑完成后合并；检测到冲突时自动或交互式地进行处理。
+
+\section{GeoWeb}
+
+\par GeoWeb描述了一种已充分实现的远景：数据、软件、硬件等GIS的组成部分通过网络远程组织；因特网成为一个巨大的GIS. 相比于传统工作模式，数据存储的位置、数据处理的位置不一定要与用户的位置相同；作为关注对象的位置可以与用户位置相同（用户可以在实地使用GIS）。信息基础设施(Cyberinfrastructure)一词用于描述支撑科学活动的高速网络、高性能处理器、分布式传感网和数据集。
+
+\par 不同设备、数据、程序的互操作依赖标准和规范，其中地理信息领域的规范包括OGC (Open Geospatial Consortium) 指制定的简单要素规范、地理标记语言(Geography Markup Language)、互联网服务规范(Web Map/Feature/Coverage Service)。
+
+\par 对象级元数据(Object-Level Metadata, OLM)是一个数据集内容的描述，有助于数据集检索、可用性的评估。最广泛使用的OLM标准是FGDC (US Federal Geographic Data Committee) CSDGM (Content Standards for Digital Geospatial Metadata). 这一标准旨在列出数据集所有已知、有潜在价值的性质，使元数据的生产成本较高，有时采用精简形式的元数据（如Dublin Core标准，不限于空间数据集）。
+
+\par Geolibrary是支持根据地理位置检索的网络数据库；Geoportal是整合众多Geolibrary的搜索平台（如美国官方的geo.data.gov）。
+
+\par Web 2.0用于描述互联网内容更多地由用户创作的现象。
+
+\par 基于位置的服务(Location-based Service)指计算设备可获知自身位置，并根据位置调整所提供信息的服务。定位方法包括GNSS、所连接基站位置、IP地址等。其应用包括紧急求助电话、周边查询与导航等。
+
+\par 两类地理信息分析功能更适合作为服务提供：依赖大数据量、昂贵且更新频繁的数据集（如地理编码、路线查询、地名服务等），依赖专业运行设备的复杂操作。

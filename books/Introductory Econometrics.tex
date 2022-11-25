@@ -28,13 +28,25 @@
 \end{equation}
 
 \par \textbf{(3)不存在完全共线性}：样本中没有一个自变量是常数，自变量之间也没有严格线性关系。
-\par 这一假定保证了普通最小二乘法(ordinary least squares, OLS)估计的存在唯一性。自变量之间的非线性依赖关系是被允许的。
+\par 这一假定保证了普通最小二乘法(ordinary least squares, OLS)估计的存在唯一性。假定的成立必要条件是样本容量$n\ge k+1$。自变量之间的非线性依赖关系是被允许的。
 
 \par \textbf{(4)零条件均值}：给定自变量任何值，误差期望为0.
 \begin{equation}
     E(u\vert x_1, \dots, x_k)=0.
 \end{equation}
-\par 这一假定保证了OLS参数估计的无偏性。自变量与误差独立是一个更强的条件。
+\par 这一假定保证了OLS参数估计的无偏性。其蕴含$\text{Cov}(u,x_j)=0, j=1,\dots,k$；而自变量与误差独立是一个更强的条件。违背此假定的情形包括因变量与自变量关系的误设（如应为二次函数但模型未包括二次项）、遗漏变量（且该变量与任一自变量相关）等。
+\par 假定(1)(4)可写成
+\begin{equation}
+    E(y\vert x_1,\dots,x_k)=\beta_0+\beta_1 x_1+\dots+\beta_k x_k
+\end{equation}
+这称为总体回归函数(population regression function)。
+
+\par \textbf{(5)同方差性(homoskedasticity)}：给定自变量任何值，误差方差相同，
+\begin{equation}
+    \text{Var}(u\vert x_1, \dots, x_k)=\sigma^2
+\end{equation}
+也即$\text{Var}(y\vert x_1, \dots, x_k)=\sigma^2$。误差方差随自变量变化，称为异方差性(heteroskedasticity)。
+\par 假设(1)-(5)称为横截面数据回归的Gauss-Markov假定。
 
 \subsection{最小二乘法}
 
@@ -42,7 +54,7 @@
 \begin{equation}
     \hat{y}=\hat{\beta}_0+\hat{\beta}_1 x_1+\dots+\hat{\beta}_k x_k
 \end{equation}
-观测$i$的拟合值为
+其中$\hat{\beta}_0$称截距估计值(intercept estimate)，$\hat{\beta}_j(j=1,\dots,k)$称斜率参数(slope estimate)。观测$i$的拟合值为
 \begin{equation}
     \hat{y}_i=\hat{\beta}_0+\hat{\beta}_1 x_{i1}+\dots+\hat{\beta}_k x_{ik}
 \end{equation}
@@ -50,4 +62,87 @@
 \begin{equation}
     \hat{u}_i = y_i-\hat{y}_i.
 \end{equation}
-普通最小二乘法以残差平方和最小为依据，
+区别于不可观测的误差，残差是可以计算得到的。普通最小二乘法最小化残差平方和，得到如下一阶条件(first order conditions):
+\begin{align}
+    &\sum_{i=1}^N \hat{u}_i=0\\
+    &\sum_{i=1}^N \hat{u}_ix_{ij}=0, j=1,\dots,k
+\end{align}
+这也可以由零条件均值假设推出：上式为$Eu=0, E(x_ju)=0$在样本中的对应。
+
+\par 斜率估计值的一个公式为
+\begin{equation}
+    \hat{\beta}_j=\frac{\sum_{i=1}^n \hat{r}_{ij}y_i}{\sum_{i=1}^n \hat{r}_{ij}^2}
+\end{equation}
+其中$\hat{r}_{ij}$为$x_j$对$x_1,\dots,x_{j-1},x_{j+1},\dots,x_k$的回归残差。右端即$y$对该残差进行简单线性回归的斜率估计，表明多元回归度量了“排除其他变量影响”时的关系。
+
+\par 定义总平方和(total sum of squares, SST), 解释平方和(explained sum of squares, SSE), 残差平方和(sum of squared residuals, SSR)如下:
+\begin{align}
+    \text{SST}&=\sum_{i=1}^n (y_i-\bar{y}^2)\\
+    \text{SSE}&=\sum_{i=1}^n (\hat{y}_i-\bar{y}^2)\\
+    \text{SSR}&=\sum_{i=1}^n u_i^2
+\end{align}
+可以证明SST=SSR+SSE。定义决定系数(coefficient of determination，R-squared，$R^2$)：
+\begin{equation}
+    R^2=1-\text{SSR}/\text{SST}\label{eq:Rsquared}
+\end{equation}
+$R^2$同时是实际值$y_i$和拟合值$\hat{y}_i$相关系数的平方。注意这只对于线性回归成立，在其它模型下，二者可能不同；按式(\ref{eq:Rsquared})计算，$R^2$可能为负；但按相关系数平方计算，$R^2$总在[0,1]中。
+
+\subsection{OLS估计量的期望和方差}
+
+\par 在假定(1)-(4)下，OLS估计量是总体参数的无偏估计量，即
+\begin{equation}
+    E(\hat{\beta}_j)=\beta_j, j=0,1,\dots,k
+\end{equation}
+\par 在假定(1)-(5)下，OLS斜率估计量以自变量为条件的方差为
+\begin{equation}
+    \text{Var}(\hat{\beta}_j)=\frac{\sigma^2}{\text{SST}_j (1-R_j^2)}, j=0,1,\dots,k \label{eq:Variance}
+\end{equation}
+其中$SST_j=\sum_{i=1}^n (x_{ij}-\bar{x}_j)^2$，$R_j^2$是$x_j$对所有其它自变量回归得到的$R^2$。
+\par 在假定(1)-(5)下，
+\begin{equation}
+    \hat{\sigma}^2=\text{SSR}/(n-k-1)
+\end{equation}
+是误差方差的无偏估计。其平方根$\hat{\sigma}$称回归标准差(standard error of regression, SER)。由此得到OLS斜率估计量标准差的估计：
+\begin{equation}
+    \text{se}(\hat{\beta}_j)=\hat{\sigma}/\sqrt{\text{SST}_j(1-R_j^2)}
+\end{equation}
+随着样本量的增大，其以$1/\sqrt{n}$速率收敛到0.
+
+\subsection{Gauss-Markov定理}
+
+\par 在假定(1)-(5)下，对任何$j=0,1,\dots,k$，设$\Tilde{\beta}_j$是$\beta_j$的任一无偏估计量，且具有形式$\Tilde{\beta}_j=\sum_{i=1}^n w_{ij}y_i$，其中$w_{ij}$是自变量值的函数，则有
+\begin{equation}
+    \text{Var}(\Tilde{\beta}_j)\ge \text{Var}(\hat{\beta}_j)
+\end{equation}
+也即OLS估计量是最优（方差最小）的线性无偏估计量(best linear unbiased estimate)。
+
+\subsection{遗漏变量偏误}
+
+\par 若包含了无关变量，即总体模型中事实上某个$\beta_j=0$，其它自变量斜率估计值的无偏性不受影响。
+
+\par 若遗漏了有关变量，则所有OLS估计量都可能存在偏误，称遗漏变量偏误(omitted variable bias)。不失一般性，设遗漏变量$x_k$后的OLS估计量为$\Tilde{\beta}_j,j=0,1,\dots,k-1$，$x_k$对$x_1,\dots,x_{k-1}$回归的斜率估计值为$\Tilde{\delta}_j,j=1,\dots,k-1$，则有
+\begin{equation}
+    \Tilde{\beta}_j=\hat{\beta}_j+\hat{\beta}_k\Tilde{\delta}_j
+\end{equation}
+其关于自变量的条件期望为
+\begin{equation}
+    E(\Tilde{\beta}_j)=\beta_j+\beta_k\Tilde{\delta}_j
+\end{equation}
+故除非$x_k$是无关变量，或回归系数$\Tilde{\delta}_j=0$。有时可以利用$\beta_k$和$\Tilde{\delta}_j$的符号推测遗漏变量偏误的方向。
+\par 对于OLS估计量的方差而言，遗漏变量会使其减小(\ref{eq:Variance})。但方差会随样本量的增大而减小，而期望的偏差不会，故大样本情况下更倾向于使用完整模型，而不是为避免多重共线性加剧遗漏变量。
+
+\subsection{多重共线性}
+
+\par 多重共线性(multicollinearity)指自变量之间高度相关（但不完全相关）。多重共线性不影响OLS估计量的无偏性，但会使其方差增大。
+\par 方差膨胀因子(variance inflation factor, VIF)定义为：
+\begin{equation}
+    \text{VIF}=1/(1-R_j^2)
+\end{equation}
+不应依据$R^2_j$或VIF值简单推断多重共线性的影响，因为OLS估计量的标准差还取决于误差方差和自变量的样本波动。此外若关注的变量与出现多重共线性的变量不相关，多重共线性不影响关注变量的方差。
+
+\subsection{过原点回归}
+\par 若利用最小二乘法估计不含截距项的模型，则残差的样本均值不一定为0；若$\beta_0\neq 0$，OLS的斜率估计量将有偏。若$\beta_0=0$，带截距回归的OLS斜率估计量方差比过原点回归大。
+
+\subsection{非线性关系建模}
+\par 常半弹性模型：$\ln y=\beta_0+\beta_1 x$，解读为$x$每增加1，$y$增加100$\beta_1$\%.
+\par 常弹性模型：$\ln y=\beta_0+\beta_1 \ln x$，解读为$x$每增加1\%，$y$增加$\beta_1$\%.

@@ -11,3 +11,43 @@
 \par 数据集分类：(1)\textbf{横截面数据}(cross-sectional data)， 同一时间段（或不考虑时间差异）多个样本，通常假定是随机抽样得到（即样本独立同分布）。(2)\textbf{时间序列数据}(time series data)，一个或多个变量不同时间的观测值，一般不能假定观测独立于时间，需考虑自相关、季节效应等。(3)\textbf{混合横截面数据}(pooled cross-section data)，多个时间段横截面数据的组合（每个时间段对应不同随机样本）。(4)\textbf{面板数据}(panel data)，多个样本的时间序列，区别于混合横截面数据，每个单元都被重复观测；可以控制观测单元无法观测的特征，有助于因果推断和时间滞后的研究。
 
 \par 研究两个变量的关系时往往需要其它（相关）因素不变(ceteris paribus)；退一步的要求是所关注自变量的选择独立于其它相关因素，从而可以视为实验数据。非实验数据的特征导致难以达到识别因果效应(casual effect)的目标。
+
+\section{线性回归模型}
+
+\subsection{模型假定}
+\par \textbf{(1)线性于参数}：总体模型为
+\begin{equation}
+    y=\beta_0+\beta_1 x_1+\dots+\beta_k x_k +u
+\end{equation}
+其中$\beta_0$称截距(intercept)，$\beta_j(j=1,\dots,k)$称斜率参数(slope parameter)，$u$为误差项。
+\par 这一模型称为多元线性回归(multiple linear regression)模型；当$k=1$时，称为简单线性回归(simple linear regression)模型。
+
+\par \textbf{(2)随机抽样}：设有来自上述总体模型的含$n$个观测的随机样本$\{(x_{i1}, \dots, x_{ik}, y_i)\}_{i=1}^N$，也即每个样本满足
+\begin{equation}
+    y_i=\beta_0+\beta_1 x_{i1}+\dots+\beta_k x_{ik} +u_i.
+\end{equation}
+
+\par \textbf{(3)不存在完全共线性}：样本中没有一个自变量是常数，自变量之间也没有严格线性关系。
+\par 这一假定保证了普通最小二乘法(ordinary least squares, OLS)估计的存在唯一性。自变量之间的非线性依赖关系是被允许的。
+
+\par \textbf{(4)零条件均值}：给定自变量任何值，误差期望为0.
+\begin{equation}
+    E(u\vert x_1, \dots, x_k)=0.
+\end{equation}
+\par 这一假定保证了OLS参数估计的无偏性。自变量与误差独立是一个更强的条件。
+
+\subsection{最小二乘法}
+
+\par 给定自变量、因变量的一个样本，被估计的方程，即样本回归函数(sample regression function)形如
+\begin{equation}
+    \hat{y}=\hat{\beta}_0+\hat{\beta}_1 x_1+\dots+\hat{\beta}_k x_k
+\end{equation}
+观测$i$的拟合值为
+\begin{equation}
+    \hat{y}_i=\hat{\beta}_0+\hat{\beta}_1 x_{i1}+\dots+\hat{\beta}_k x_{ik}
+\end{equation}
+残差(residual)定义为
+\begin{equation}
+    \hat{u}_i = y_i-\hat{y}_i.
+\end{equation}
+普通最小二乘法以残差平方和最小为依据，

@@ -45,7 +45,7 @@
 \begin{equation}
     Eu=0, \text{Cov}(x_j,u)=0
 \end{equation}
-(4)蕴含(4'). 这一假设与OLS一阶条件对应。(1)-(3),(4')即可得到OLS估计量的一致性，但不能保证无偏性；且得不到总体回归函数(\ref{eq:prf})。
+(4)蕴含(4'). 这一假设与OLS一阶条件对应。(1)-(3),(4')即可得到OLS估计量的一致性，但不能保证无偏性；且得不到总体回归函数(\ref{eq:prf})。若某个自变量$x_j$与$u$相关，称为\textbf{内生解释变量}(endogenous explanatory variable)。
 
 \par \textbf{(5)同方差性(homoskedasticity)}：给定自变量任何值，误差方差相同，
 \begin{equation}
@@ -216,7 +216,7 @@ $n\to \infty$时依分布收敛于自由度为$q$的$\chi^2$分布。若LM大于
 
 \subsection{预测区间估计}
 
-\par 设自变量取值$x_1=c_1,\dots,x_k=c_k$，令$\theta_0=\beta_0+\beta_1 c_1+\dots+\beta_k c_k$，则$\theta_0=E(y\vert x_1=c_1,\dots,x_k=c_k)$。估计量$\hat{\theta}_0=\hat{\beta}_0+\hat{\beta}_1 x_1+\dots+\hat{\beta}_k x_k$给出$\theta_0$的无偏估计，其标准误由$y$对$x_1-c_1,\dots,x_k-c_k$回归截距项的标准误得到，由此可计算条件均值$\theta_0$的置信区间。
+\par 设自变量取值$x_1=c_1,\dots,x_k=c_k$，令$\theta_0=\beta_0+\beta_1 c_1+\dots+\beta_k c_k$，则有$\theta_0=E(y\vert x_1=c_1,\dots,x_k=c_k)$。估计量$\hat{\theta}_0=\hat{\beta}_0+\hat{\beta}_1 c_1+\dots+\hat{\beta}_k c_k$给出$\theta_0$的无偏估计，其标准误由$y$对$x_1-c_1,\dots,x_k-c_k$回归截距项的标准误得到，由此可计算条件均值$\theta_0$的置信区间。
 
 \par 实际用于预测时，还需纳入误差的影响。设$y_0=\beta_0+\beta_1 c_1+\dots+\beta_k c_k+u_0$，估计量$\hat{y}_0=\hat{\theta}_0$，预测误差
 \begin{equation}
@@ -227,6 +227,44 @@ $n\to \infty$时依分布收敛于自由度为$q$的$\chi^2$分布。若LM大于
     \text{se}(\hat{e}_0)=\sqrt{(\text{se}(\hat{y}_0))^2+\hat{\sigma}^2}
 \end{equation}
 在假定(1)-(6)下，$\hat{e}_0/\text{se}(\hat{e}_0)$服从$n-k-1$个自由度的$t$分布，由此可计算预测区间(prediction interval)。
+
+\subsection{过原点回归}
+\par 若利用最小二乘法估计不含截距项的模型，则残差的样本均值不一定为0；若$\beta_0\neq 0$，OLS的斜率估计量将有偏。若$\beta_0=0$，带截距回归的OLS斜率估计量方差比过原点回归大。
+
+\subsection{非线性关系建模}
+\par \textbf{常弹性模型}：$\ln y=\beta_0+\beta_1 \ln x$，解读为$x$每增加1\%，$y$增加$\beta_1$\%，$\beta_1$称为$y$对$x$的弹性。
+
+\par \textbf{常半弹性模型}：$\ln y=\beta_0+\beta_1 x$，解读为$x$每增加1，$y$增加100$\beta_1$\%，100$\beta_1$称为$y$对$x$的半弹性。
+
+\par 当模型为$\ln y=\beta_0+\beta_1 x_1+\dots+\beta_k x_k+u$时，由$\ln y_0$的预测区间上下界$[c_l,c_m]$可得$y_0$的预测区间$[e^{c_l},e^{c_m}]$；但点估计不能直接通过指数运算得到，在假定(1)-(6)下，
+\begin{equation}
+    E(y\vert \mathbf{x})=\exp(\sigma^2/2)\exp(\beta_0+\beta_1 x_1+\dots+\beta_k x_k)
+\end{equation}
+故预测值应调整为
+\begin{equation}
+    \hat{y}=\exp(\hat{\sigma}^2/2)\exp( \hat{\ln y})
+\end{equation}
+这一估计量一致但非无偏。若不满足正态性假设，预测值为
+\begin{align}
+&E(y\vert \mathbf{x})=\alpha_0\exp(\beta_0+\beta_1 x_1+\dots+\beta_k x_k)\\
+&\hat{y}=\hat{\alpha}_0\exp( \hat{\ln y})
+\end{align}
+$\alpha_0$的矩估计量是
+\begin{equation}
+    \hat{\alpha}_0=\frac{1}{n}\sum_{i=1}^n \exp(\hat{u}_i)
+\end{equation}
+这一估计量一致但非无偏，且总大于1（除非所有残差为0）。
+\par 令$m=\exp(\beta_0+\beta_1 x_1+\dots+\beta_k x_k)$，则$E(y\vert m)=\alpha_0 m$。记$\hat{m}_i=\exp (\hat{\ln y_i})$，利用过原点回归得到$\alpha_0$的估计量
+\begin{equation}
+    \check{\alpha}_0=\frac{\sum_{i=1}^n \hat{m}_i y_i}{\sum_{i=1}^n \hat{m}_i^2}
+\end{equation}
+这一估计量一致但非无偏，且可能小于1（此时可能意味着假定不满足）。
+\par 因变量为对数时的$R^2$不能和因变量为水平值的情形直接比较，解决方法有二：一是计算上述$\hat{m}_i$与$y_i$相关系数的平方（不依赖$\alpha_0$估计量的选取）；二是计算
+\begin{equation}
+    1-\frac{\sum_{i=1}^n(y_i-\hat{\alpha}_0\exp(\hat{\ln y_i}))^2}{\sum_{i=1}^n(y_i-\bar{y})^2}
+\end{equation}
+
+\par 当方程包含二次项或两个变量的乘积项时，变量的偏效应取决于自变量取值。平均偏效应(average partial effect)即自变量取样本均值时的偏效应。包含乘积项时称这两个变量具有\textbf{交互效应}(interaction effect)；通过将二次项改写为$x_1(x_2-c_2)$，则$x_1$的一次项系数可反映$x_2=c_2$时$x_1$的偏效应，同时可得到其标准误。
 
 \subsection{遗漏变量偏误}
 
@@ -263,15 +301,17 @@ $n\to \infty$时依分布收敛于自由度为$q$的$\chi^2$分布。若LM大于
 \end{equation}
 不应依据$R^2_j$或VIF值简单推断多重共线性的影响，因为OLS估计量的标准差还取决于误差方差和自变量的样本波动。此外若关注的变量与出现多重共线性的变量不相关，多重共线性不影响关注变量的方差。
 
-\subsection{过原点回归}
-\par 若利用最小二乘法估计不含截距项的模型，则残差的样本均值不一定为0；若$\beta_0\neq 0$，OLS的斜率估计量将有偏。若$\beta_0=0$，带截距回归的OLS斜率估计量方差比过原点回归大。
+\subsection{模型误设}
 
-\subsection{非线性关系建模}
-\par 常弹性模型：$\ln y=\beta_0+\beta_1 \ln x$，解读为$x$每增加1\%，$y$增加$\beta_1$\%，$\beta_1$称为$y$对$x$的弹性。
-
-\par 常半弹性模型：$\ln y=\beta_0+\beta_1 x$，解读为$x$每增加1，$y$增加100$\beta_1$\%，100$\beta_1$称为$y$对$x$的半弹性。
-
-\par 当方程包含二次项或两个变量的乘积项时，变量的偏效应取决于自变量取值。平均偏效应(average partial effect)即自变量取样本均值时的偏效应。包含乘积项时称这两个变量具有交互效应(interaction effect)；通过将二次项改写为$x_1(x_2-c_2)$，则$x_1$的一次项系数可反映$x_2=c_2$时$x_1$的偏效应，同时可得到其标准误。
+\par \textbf{邹至庄(Chow)检验}：用于检验组间回归方程的差异，是F检验的一种特殊形式。设分组模型为：
+\begin{equation}
+    y=\beta_{g,0}+\beta_{g,1}x_1+\dots+\beta_{g,k}x_k+u
+\end{equation}
+其中$g=1,2$。两方程可合写为包含1个虚拟变量、$k$个虚拟变量交互项的一个方程，自由度为$2k+2$。考虑对假设$H_0: \beta_{1,j}=\beta_{2,j},j=0,\dots,k$的F检验：
+\begin{equation}
+    F=\frac{(\text{SSR}_P-\text{SSR}_1-\text{SSR}_2)/(k+1)}{(\text{SSR}_1+\text{SSR}_2)/(n-2k-2)}
+\end{equation}
+其中$\text{SSR}_P$是两组样本合并估计方程的残差平方和。
 
 \subsection{关于实践的评注}
 \par 为得到以标准差为单位度量的偏效应，可先将所有自变量和因变量进行Z-score标准化（减去均值，除以标准差），此时得到的系数$\hat{b}_j$称为标准化系数，其与未标准化系数的关系是
@@ -283,4 +323,10 @@ $n\to \infty$时依分布收敛于自由度为$q$的$\chi^2$分布。若LM大于
 
 \par 较低的$R^2$并不意味着无法得到准确的偏效应估计。只要未加入模型的解释因素与自变量无关（假定(4)成立），就不影响OLS斜率估计量的无偏性；样本量的增大也可抵消误差方差对估计量方差的影响。但较低的$R^2$会给预测带来困难。
 
-\par 若关注$x_1$对$y$的影响，而这种影响通过中间变量$x_2$实现，就不应将$x_2$加入模型。如吸烟对家庭医疗支出的影响，不应将去医院次数作为解释变量。判定依据是“其它条件不变”是否有意义。但对于影响$y$又与$x_1$无关的自变量，总可以将其加入模型以减少误差方差。
+\par 若关注$x_1$对$y$的影响，而这种影响通过中间变量$x_2$实现，就不应将$x_2$加入模型。如吸烟对家庭医疗支出的影响，不应将去医院次数作为解释变量。判定依据是“其它条件不变”是否有意义。但对于影响$y$又与$x_1$无关的自变量，总可以将其加入模型以减少估计量的方差。
+
+\par 定性信息可作为二值变量（也称虚拟变量，binary/dummy variable）加入模型；对于$m$类分类变量（分级等序数量类似处理），一般选其中一个为基组(base group)，加入$m-1$个虚拟变量。自变量中的虚拟变量度量不同分组的截距差异；虚拟变量与非虚拟变量的交互项度量不同分组的斜率差异。若因变量为二值变量，称为线性概率模型(linear probability model)，斜率系数度量了单位自变量增加导致的响应概率$P(y=1)$的变化，其缺陷是可能得到小于0或大于1的概率拟合值，且异方差性往往存在：
+\begin{equation}
+    \text{Var}(y\vert \textbf{x})=p(\textbf{x})(1-p(\textbf{x}))
+\end{equation}
+其中$p(\textbf{x})=\beta_0+\beta_1 x_1+\dots+\beta_kx_k$为成功概率。

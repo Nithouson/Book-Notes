@@ -195,7 +195,7 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par GIS中常用的三类数据库包括关系数据库(Relational DBMS)、对象数据库(Object DBMS)和对象关系数据库(Object-Relational DBMS)。ORDBMS是附加对象处理功能的RDBMS，IBM DB2、Oracle、Microsoft SQL Server都属于此类。
 
-\par 数据库针对空间数据的扩展主要包括空间数据类型、空间对象的运算函数、查询优化器、空间索引等。加入空间扩展的ORDEMS仍不具备完整GIS的分析、制图等功能，往往作为数据与GIS之间的中间工具。SQL的扩展SQL/MM支持了空间数据类型和相关函数。几何对象的运算包括距离、缓冲区、凸包、求交等。
+\par 数据库针对空间数据的扩展主要包括空间数据类型、空间对象的运算函数、查询优化器、空间索引等。加入空间扩展的ORDBMS仍不具备完整GIS的分析、制图等功能，往往作为数据与GIS之间的中间工具。SQL的扩展SQL/MM支持了空间数据类型和相关函数。几何对象的运算包括距离、缓冲区、凸包、求交等。
 
 \par Ted Codd提出的若干范式可通过拆分表格实现，以达到减少冗余的目的，查询时需要重新连接。由于大表的连接操作很费时，GIS中图层数据表往往不遵循此类范式。
 
@@ -222,3 +222,7 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 \par 两类地理信息分析功能更适合作为服务提供：依赖大数据量、昂贵且更新频繁的数据集（如地理编码、路线查询、地名服务等），依赖专业运行设备的复杂操作。
 
 \section{地图学}
+
+\par 地图是多数GIS最重要的输出，是概括、传递GIS操作结果的有效手段。可以区分两类GIS输出：(1)遵循制图规范的正式地图(formal map)；(2)仅用于显示、分析、编辑、查询的临时地图(transitory map)或类地图的可视化(map-like visualization)。二者在制图目的、工具、技术上存在显著差别。二者分别在本节和下一节讨论。
+
+\par “地图(map)”一词用于描述“digital or analog output from a GI System that shows geographic information using well-established cartographic conventions.” 海图被称为chart，其含义与map一致。地图的两种基本类型是普通地图(reference map)和专题地图(thematic map)。地图满足了地理信息的存储(storage)和交流(communication)两大功能。地图的局限性包括：(1)可能在无意或故意的情况下传递误导信息；(2)只是空间过程的单次采样，重复采样可能带来变异，故基于地图进行推断需谨慎；(3)使用复杂的分类规则、符号等，未受训练的读图者可能难以解读。相比于纸质地图，GIS中的数字地图更具灵活性，支持比例尺缩放（避免了制图综合的信息丢失）、动态信息、三维交互、图层显隐控制等，且不受地图分幅的限制。

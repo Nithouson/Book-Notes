@@ -225,6 +225,10 @@ R\arccos (\sin\phi_1 \sin \phi_2 +\cos \phi_1 \cos \phi_2 \cos(\lambda_1-\lambda
 
 \par 地图是多数GIS最重要的输出，是概括、传递GIS操作结果的有效手段。可以区分两类GIS输出：(1)遵循制图规范的正式地图(formal map)；(2)仅用于显示、分析、编辑、查询的临时地图(transitory map)或类地图的可视化(map-like visualization)。二者在制图目的、工具、技术上存在显著差别。二者分别在本节和下一节讨论。
 
-\par “地图(map)”一词用于描述“digital or analog output from a GI System that shows geographic information using well-established cartographic conventions.” 海图被称为chart，其含义与map一致。地图的两种基本类型是普通地图(reference map)和专题地图(thematic map)。地图满足了地理信息的存储(storage)和交流(communication)两大功能。地图的局限性包括：(1)可能在无意或故意的情况下传递误导信息；(2)只是空间过程的单次采样，重复采样可能带来变异，故基于地图进行推断需谨慎；(3)使用复杂的分类规则、符号等，未受训练的读图者可能难以解读。相比于纸质地图，GIS中的数字地图更具灵活性，支持比例尺缩放（避免了制图综合的信息丢失）、动态信息、三维交互、图层显隐控制等，且不受地图分幅的限制。
+\par “地图(map)”一词用于描述“digital or analog output from a GI System that shows geographic information using well-established cartographic conventions.” 海图被称为chart，其含义与map一致。地图的两种基本类型是普通地图(reference map)和专题地图(thematic map)。地图满足了地理信息的存储(storage)和交流(communication)两大功能。地图的局限性包括：(1)可能在无意或故意的情况下传递误导信息；(2)只是空间过程的单次采样，重复采样可能存在变异，故基于地图进行推断需谨慎；(3)使用复杂的分类规则、符号等，未受训练的读图者可能难以解读。相比于纸质地图，GIS中的数字地图更具灵活性，支持比例尺缩放（避免了制图综合的信息丢失）、动态信息、三维交互、图层显隐控制等，且不受地图分幅的限制。
 
-\par 地图设计的首要目标是分享信息、突出模式和过程、展示结果；做出令人满意、有趣的图片是次要的，不应牺牲对现实的忠实性。Robinson等的《Elements of Cartography》总结了地图设计的七种控制因素：目的(purpose)，现实(reality)，可用数据(avaliable data)，比例尺(map scale)
+\par 地图设计的首要目标是分享信息、突出模式和过程、展示结果；做出令人满意、有趣的图片是次要的，不应牺牲对现实的忠实性。Robinson等的\emph{Elements of Cartography}总结了地图设计的七种控制因素：目的（普通/专题地图），现实，可用数据，比例尺，受众（决策者/专业人士/视障人士），使用条件（室内/室外不同光线条件），技术限制（如显示设备分辨率、传输带宽）。
+
+\par \textbf{地图组成}：地图主体(map body)，嵌入或缩略图(inset/overview map)，图名，图例，比例尺，方向指示（指北针、格网(grid)、经纬网(graticule)），地图元数据。
+
+\par \textbf{地图符号化}：Bertin和MacEachren总结了十种图元(graphic primitives)，即基本点、线、面的表达维度：尺寸(size)，朝向(orientation)，数值(value，即亮度)，色相(hue)，饱和度(saturation)，形状(shape)，排列(arrangement)，纹理(texture)，焦点(focus)，位置(location)。其中色相（可能与形状、纹理结合）表示分类属性；位置指投影变换或为增强可理解性进行的偏移。

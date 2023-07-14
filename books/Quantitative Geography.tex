@@ -61,6 +61,35 @@ $s$是样本标准差。
 
 \par \textbf{投影寻踪}(Projection Pursuit)：指根据要探测的特征选取某个高维特征空间到二（三）维的投影，属于连续优化问题。探测的目标可以是偏离高斯分布的情况（中心孔洞或偏态分布），或最小化平均最邻近距离(Mean Nearest-Neighbor Distance)来探测聚类特征。与之相对的是总体巡查(Grand Tour)，投影方向动态变化，以显示所有可能的投影。引导性总体巡查播放投影寻踪中的迭代优化过程。
 
+\section{点模式分析}
+\par 点模式分析主要检测点集空间分布的两种现象：聚集和分散，即聚集程度大于或小于随机分布；比较同一区域多组点集分布间的关系，或点集与参考场间的关系（如病例相对于人口密度的集中程度）。
+
+\par \textbf{探索性分析}：绘制空间散点图（注意检查是否有重合点，如有可改用气泡图）；计算点集重心，标准距离（到重心的均方根距离）\footnote{当点集不止一个聚簇时，重心和标准距离可能意义不大。}；
+\begin{equation}
+    d_s = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})^2+(y_i-\bar{y})^2}
+\end{equation}
+计算最邻近距离(Nearest-Neighbor Distance)的分布。
+
+\par \textbf{点过程强度}：设$X$是研究区$R$内的点集，$x$点处的强度定义为
+\begin{equation*}
+    \lambda(x)=\lim\limits_{r\to 0}\frac{E(\vert X\cap U(x,r) \vert)}{\pi r^2}
+\end{equation*}
+其与概率密度差一个常数：
+\begin{equation}
+    f(x)=\frac{\lambda(x)}{E(\vert X\cap R \vert)}
+\end{equation}
+考虑不同位置的相互作用，定义二阶强度为
+\begin{equation*}
+\gamma(x_1,x_2)=\lim\limits_{r_1\to 0,r_2\to 0}\frac{E(\vert X\cap U(x_1,r_1) \vert\vert X\cap U(x_2,r_2) \vert)}{\pi^2 r_1^2r_2^2}
+\end{equation*}
+满足二阶平稳假设时，有$\gamma(x_1,x_2)=\gamma(\vert x_1-x_2 \vert)$。观测到的聚集理论上既可能由于一阶强度非恒定，也可能由于相互作用存在(事件之间不独立)；二者很难区分。
+
+\par 完全空间随机模式(Complete Spatial Randomness, CSR)假设：(1)一阶强度恒定，$\lambda(x)\equiv \lambda$；(2)事件之间相互独立，即对任意两个不交的区域$A_1,A_2$，$\operatorname{cov}(\vert X\cap A_1\vert,\vert X\cap A_2\vert)=0$。此时任一子区域$A$的点数量服从均值为$\lambda \vert A \vert$的Poisson分布。
+
+\par \textbf{样方法}：
+
+\par \textbf{核密度估计}：
+
 \section{局部分析}
 
 \par 全局分析是对研究区域的整体概括，可能隐藏空间变化。局部分析强调空间的差异性，其发展动力部分来源于对GIS与空间分析集成的兴趣（局部分析是空间显式的，其结果可用GIS可视化）。
@@ -72,3 +101,15 @@ $s$是样本标准差。
 \par \textbf{局部自相关分析}：可视化方法包括半方差函数云(semivariogram, 变量平方差对距离)和Moran散点图(邻域均值对当前值)。局部自相关指数包括Getis-Ord $G_i$指数和Moran $I_i$指数\footnote{Anselin指出，若要求全局与局部统计量有加和关系，$G_i$不属于局部空间自相关统计量。}。
 
 \par \textbf{局部回归分析}：包括(1)空间自适应滤波(Spatial Adaptive Filtering)，参数估计难以进行统计检验。(2)贝叶斯随机系数模型、多层次模型，没有关系空间依赖性的假设。(3)空间扩展法。(4)地理加权回归。
+
+\par 多层次模型同时包含个体因素和地点因素（语境效应），避免仅考虑个体层面的微体谬误(Atomistic Fallacy)和仅考虑总体层面的生态谬误(Ecological Fallacy)；需要定义离散的空间单元，且地理过程在边界处发生突变。
+
+\par 空间扩展法的局限性在于需要预先设定方程的形式，且只能建模关系空间变化的整体趋势，可能掩盖局部变化。
+
+\par 地理加权回归原理与局部加权回归(Locally Weighted Regression)、回归参数漂移分析(Drift Analysis of Regression Parameters, DARP)相似；后两种数据权重由属性相似度而非地理距离决定。
+
+\par \textbf{局部空间交互模型}：交互起点为单元$i$的条件下，终点为单元$k$的概率
+\begin{equation}
+    p_{ik}=\frac{S_k^\alpha d_{ik}^{-\beta}}{\sum_j S_j^\alpha d_{ij}^{-\beta}}
+\end{equation}
+全局模型对参数$\alpha,\beta$作全局估计，也可对每个起点分别估计模型，得到参数的空间变化。

@@ -70,25 +70,47 @@ $s$是样本标准差。
 \end{equation}
 计算最邻近距离(Nearest-Neighbor Distance)的分布。
 
-\par \textbf{点过程强度}：设$X$是研究区$R$内的点集，$x$点处的强度定义为
+\par \textbf{点过程强度}：设$X$是研究区$R$内的点集，$\mathbf{x}$点处的强度定义为
 \begin{equation*}
-    \lambda(x)=\lim\limits_{r\to 0}\frac{E(\vert X\cap U(x,r) \vert)}{\pi r^2}
+\lambda(\mathbf{x})=\lim\limits_{r\to 0}\frac{E(\vert X\cap U(\mathbf{x},r) \vert)}{\pi r^2}
 \end{equation*}
 其与概率密度差一个常数：
 \begin{equation}
-    f(x)=\frac{\lambda(x)}{E(\vert X\cap R \vert)}
+f(\mathbf{x})=\frac{\lambda(\mathbf{x})}{E(\vert X\cap R \vert)}
 \end{equation}
 考虑不同位置的相互作用，定义二阶强度为
 \begin{equation*}
-\gamma(x_1,x_2)=\lim\limits_{r_1\to 0,r_2\to 0}\frac{E(\vert X\cap U(x_1,r_1) \vert\vert X\cap U(x_2,r_2) \vert)}{\pi^2 r_1^2r_2^2}
+\gamma(\mathbf{x}_1,\mathbf{x}_2)=\lim\limits_{r_1\to 0,r_2\to 0}\frac{E(\vert X\cap U(\mathbf{x}_1,r_1) \vert\vert X\cap U(\mathbf{x}_2,r_2) \vert)}{\pi^2 r_1^2r_2^2}
 \end{equation*}
-满足二阶平稳假设时，有$\gamma(x_1,x_2)=\gamma(\vert x_1-x_2 \vert)$。观测到的聚集理论上既可能由于一阶强度非恒定，也可能由于相互作用存在(事件之间不独立)；二者很难区分。
+满足二阶平稳假设时，有$\gamma(\mathbf{x}_1,\mathbf{x}_2)=\gamma(\mathbf{x}_1-\mathbf{x}_2)$。观测到的聚集理论上既可能由于一阶强度非恒定，也可能由于相互作用存在(事件之间不独立)；二者很难区分。
 
-\par 完全空间随机模式(Complete Spatial Randomness, CSR)假设：(1)一阶强度恒定，$\lambda(x)\equiv \lambda$；(2)事件之间相互独立，即对任意两个不交的区域$A_1,A_2$，$\operatorname{cov}(\vert X\cap A_1\vert,\vert X\cap A_2\vert)=0$。此时任一子区域$A$的点数量服从均值为$\lambda \vert A \vert$的Poisson分布。
+\par 完全空间随机模式(Complete Spatial Randomness, CSR)假设：(1)一阶强度恒定，$\lambda(\mathbf{x})\equiv \lambda$；(2)事件之间相互独立，即对任意两个不交的区域$A_1,A_2$，$\operatorname{cov}(\vert X\cap A_1\vert,\vert X\cap A_2\vert)=0$。此时任一子区域$A$的点数量服从均值为$\lambda \vert A \vert$的Poisson分布。
 
-\par \textbf{样方法}：
+\par 一阶强度分析方法包括样方法、核密度估计；二阶强度分析包括K函数等。
 
-\par \textbf{核密度估计}：
+\par \textbf{样方法}：将研究区域划分为等大网格，统计每个网格内点的数量$\{g_i\}_{i=1}^G$，检验其是否符合Poisson分布。一种方法是利用Poisson分布均值等于方差的性质：
+\begin{equation}
+    I = \frac{\sum_{i=1}^G (g_i-\bar{g})^2}{(G-1)\bar{g}}
+\end{equation}
+CSR假设下近似有$(G-1)I \sim \chi_{G-1}^2$\footnote{当$G>6$且$\lambda\vert A_g\vert>1$时（$A_g$为任一网格），可认为近似成立。}。$I$的显著高值代表聚集分布，显著低值代表规则分布。缺点是检验结果可能与网格大小有关。
+
+\par \textbf{核密度估计}：可视为强度朴素估计（圆盘内计数与面积之比）的连续性扩展。核强度的估计式为
+\begin{equation}
+    \hat{\lambda}(\mathbf{x})=\sum_{i=1}^n \frac{1}{h^2} k\left(\frac{\mathbf{x}-\mathbf{x}_i}{h}\right)
+\end{equation}
+除以点计数即得核概率密度估计。其中带宽$h$可取局部值（随空间位置变化）。
+
+\par \textbf{K函数}：若点过程满足二阶平稳、各向同性，二阶强度是距离的函数。定义K函数为
+\begin{equation}
+    K(d)=\frac{E_{\mathbf{x}\in X}(\vert X\cap U(\mathbf{x},d)\vert )}{\bar{\lambda}}
+\end{equation}
+其中$\bar{\lambda}$为平均强度. K函数的估计式为
+\begin{equation}
+    \hat{K}(d)=\frac{\vert R \vert}{n^2}\sum_{i=1}^n \vert X\cap U(\mathbf{x}_i,d)\vert
+    \label{eq:hatK}
+\end{equation}
+若研究区域未包含完整的空间点过程，需要考虑边缘效应。当$d$相对研究区域较小时，可在式(\ref{eq:hatK})的求和号中忽略到边界距离小于$d$的点（分母相应变为$n(n-s)$，$s$为忽略的点个数）；否则需要在和式的对应项除以调整因子以弥补边界带来的点数低估。CSR假设下有$K(d)=\pi d^2$；高于此值代表集聚，反之代表分散。显著性检验可采用自助法（估计样本分布）或Monte Carlo模拟（估计零假设下理论分布）。
+
 
 \section{局部分析}
 

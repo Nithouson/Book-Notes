@@ -82,7 +82,7 @@ f(\mathbf{x})=\frac{\lambda(\mathbf{x})}{E(\vert X\cap R \vert)}
 \begin{equation*}
 \gamma(\mathbf{x}_1,\mathbf{x}_2)=\lim\limits_{r_1\to 0,r_2\to 0}\frac{E(\vert X\cap U(\mathbf{x}_1,r_1) \vert\vert X\cap U(\mathbf{x}_2,r_2) \vert)}{\pi^2 r_1^2r_2^2}
 \end{equation*}
-满足二阶平稳假设时，有$\gamma(\mathbf{x}_1,\mathbf{x}_2)=\gamma(\mathbf{x}_1-\mathbf{x}_2)$。观测到的聚集理论上既可能由于一阶强度非恒定，也可能由于相互作用存在(事件之间不独立)；二者很难区分。
+满足二阶平稳假设时，有$\gamma(\mathbf{x}_1,\mathbf{x}_2)=\gamma(\mathbf{x}_1-\mathbf{x}_2)$。观测到的聚集理论上既可能由于一阶强度非恒定，也可能由于相互作用存在（事件之间不独立）；二者很难区分。因此一阶模型假定事件之间相互独立，强度非均质；二阶模型假定强度均质，但事件间非独立。两类方法对于单一点集的集聚性分析结果往往一致，但对于两个点集的比较，可能一阶属性（核密度曲面）差异显著而二阶属性（K函数）差异不显著。
 
 \par 完全空间随机模式(Complete Spatial Randomness, CSR)假设：(1)一阶强度恒定，$\lambda(\mathbf{x})\equiv \lambda$；(2)事件之间相互独立，即对任意两个不交的区域$A_1,A_2$，$\operatorname{cov}(\vert X\cap A_1\vert,\vert X\cap A_2\vert)=0$。此时任一子区域$A$的点数量服从均值为$\lambda \vert A \vert$的Poisson分布。
 
@@ -109,7 +109,19 @@ CSR假设下近似有$(G-1)I \sim \chi_{G-1}^2$\footnote{当$G>6$且$\lambda\ver
     \hat{K}(d)=\frac{\vert R \vert}{n^2}\sum_{i=1}^n \vert X\cap U(\mathbf{x}_i,d)\vert
     \label{eq:hatK}
 \end{equation}
-若研究区域未包含完整的空间点过程，需要考虑边缘效应。当$d$相对研究区域较小时，可在式(\ref{eq:hatK})的求和号中忽略到边界距离小于$d$的点（分母相应变为$n(n-s)$，$s$为忽略的点个数）；否则需要在和式的对应项除以调整因子以弥补边界带来的点数低估。CSR假设下有$K(d)=\pi d^2$；高于此值代表集聚，反之代表分散。显著性检验可采用自助法（估计样本分布）或Monte Carlo模拟（估计零假设下理论分布）。
+若研究区域未包含完整的空间点过程，需要考虑边缘效应。当$d$相对研究区域较小时，可在式(\ref{eq:hatK})的求和号中忽略到边界距离小于$d$的点（分母相应变为$n(n-s)$，$s$为忽略的点个数）；否则需要在和式的对应项除以调整因子以弥补边界带来的点数低估。CSR假设下有$K(d)=\pi d^2$；高于此值代表集聚，反之代表分散。可定义辅助函数与随机模式进行比较:
+\begin{align}
+    &L(d)=\sqrt{\frac{K(d)}{\pi}}-d\\
+    &l(d)=\frac{1}{2}\ln\left(\frac{K(d)}{\pi}\right)-\ln(d)
+\end{align}
+显著性检验可采用自助法（估计样本分布）或Monte Carlo模拟（估计零假设下理论分布）。为检验两组空间点的分布模式是否有显著差异，可类似定义$l_{12}(d)=\ln K_1(d)-\ln K_2(d)$，利用自助法或Monte Carlo模拟（固定事件点位置，随机分配两类点的标签）检验显著性。
+
+\par \textbf{交叉K函数}：度量一组空间点在另一组空间点周围聚集或排斥的趋势，定义为
+\begin{align}
+    &K_{12}(d)=\frac{E_{\mathbf{x}\in X_1}(\vert X_2\cap U(\mathbf{x},d)\vert )}{\bar{\lambda}_2}\\
+    &\hat{K}_{12}(d)=\frac{\vert R \vert}{n_1n_2}\sum_{\mathbf{u}\in X_1}\sum_{\mathbf{v}\in X_2} I[\|\mathbf{u}-\mathbf{v}\|\le d]
+\end{align}
+若两组空间点来自同一个点过程，则交叉K函数为$\pi d^2$.
 
 
 \section{局部分析}

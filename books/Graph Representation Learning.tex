@@ -19,7 +19,15 @@
 
 \par 异质图(heterogeneous graph)：区分不同类型节点和边.  $G=(V,E,R,T)$，边定义为$(v_i,r_{ij},v_j)\in E$, $r_{ij}\in R$是边类型，$T(v_i)$是节点类型. 在知识图谱中常用. 
 
-\par 稀疏图(sparse graph)：平均度远小于$N-1$. 大多数现实世界的网络都是稀疏图. 
+\par 稀疏图(sparse graph)：平均度远小于$N-1$. 大多数现实世界的网络都是稀疏图.
+
+\par 谱图论：无向图的Laplace矩阵定义为$L=D-A$，$A$, $D$分别为邻接矩阵和度矩阵，则$L$为对称半正定矩阵，最小特征值为0. 事实上，对于任意列向量$\mathbf{x}$，
+\begin{align}
+\mathbf{x}^TL\mathbf{x}&=\sum_{i=1}^N d_ix_i^2-\sum_{i=1}^N\sum_{j=1}^N a_{ij}x_ix_j\\
+&=\frac{1}{2}\left(\sum_{i=1}^N d_ix_i^2-2\sum_{i=1}^N\sum_{j=1}^N a_{ij}x_ix_j+\sum_{j=1}^N d_jx_j^2\right)\\
+&=\frac{1}{2}\left(\sum_{i=1}^N \sum_{j\neq i}a_{ij}(x_i-x_j)^2\right)
+\end{align}
+又有$L\mathbf{1}=D\mathbf{1}-A\mathbf{1}=0$。上述结论对归一化图拉普拉斯(renormalized graph Laplacian)矩阵$\hat{L}=I-D^{-1/2}AD^{-1/2}$仍然成立\footnote{GCN中使用的版本取$\tilde{A}=A+I$，并基于此计算度矩阵和Laplacian。注意到上述证明不限制图中的自环，从而结论仍成立。}。类似可以证明$D+A$以及$I+D^{-1/2}AD^{-1/2}$也是对称半正定的\footnote{与Laplacian的情形相比，差的平方变为和的平方，若有自环还会多出$2\sum_{i=1}^N a_{ii}x_i^2$一项。}，从而$D^{-1/2}AD^{-1/2}$的特征值均在$[-1,1]$.
 
 \section{特征提取}
 
@@ -127,7 +135,7 @@ Adamic-Adar指数：
 \par \textbf{迭代分类}(Iterative Classification)：设节点$v$特征为$f_v$，邻域类别标签汇总为向量$z_v$（可以包括各类别计数或占比、出现最多的类别、类别数等,有向图出边入边分别统计），在训练集上训练两个分类器$\phi_1(f_v)$和$\phi_2(f_v,z_v)$；在测试集上先用$\phi_1$赋初始类别，每次迭代先更新所有$z_v$再用$\phi_2$更新测试集的类别标签，直到收敛. 只使用了邻接节点类别，且没有收敛性保证. 
 
 \par \textbf{修正平滑法}(Correct \& Smooth)：先将有标签节点作为训练集、验证集，训练基于节点特征预测各类别概率的基分类器；之后利用该分类器得到所有节点的类别概率. 假设基分类器分类结果的误差具有正自相关，后处理阶段包括修正、平滑两个步骤. 
-\par 设$D=\operatorname{diag}\{d_1,\dots,d_N\}$为度矩阵，定义归一化扩散矩阵(normalized diffusion matrix)为$\tilde{A}=D^{-1/2}AD^{-1/2}$，其中$A$为邻接矩阵，满足特征值均在[-1,1]，最大特征值为1\footnote{$D^{1/2}\mathbf{1}$是一个对应的特征向量. 事实上有$\tilde{A}D^{1/2}\mathbf{1}=D^{-1/2}A\mathbf{1}=D^{-1/2}D\mathbf{1}=D^{1/2}\mathbf{1}$.}；这对$\tilde{A}^m$同样成立. 
+\par 设$D=\operatorname{diag}\{d_1,\dots,d_N\}$为度矩阵，定义归一化扩散矩阵(normalized diffusion matrix)为$\tilde{A}=D^{-1/2}AD^{-1/2}$，其中$A$为邻接矩阵。
 \par 修正步骤：设$E$为$N\times K$训练误差矩阵，对于标记节点$i$，$E_{ik}$为属于第$k$类的概率真值（0或1）与基分类器预测概率之差；对于非标记节点，对应行为0. 按下式更新误差若干次后，将误差的$s$倍加在基分类器预测概率上（$s$为超参数）；
 \begin{equation}
     E \leftarrow (1-\alpha)E + \alpha \tilde{A}E.
@@ -153,7 +161,7 @@ Adamic-Adar指数：
 \end{equation}
 其中$W_k$,$B_k$是参数. 令$H^{(k)}=[h_1^{(k)},\dots, h_N^{(k)}]^T$，有
 \begin{equation}
-    H^{(k+1)}=\sigma(D^{-1}AH^{(k)}W_k^T+H^{(k)}B_k^T), k=0,1,\dots,K-1.
+H^{(k+1)}=\sigma(D^{-1}AH^{(k)}W_k^T+H^{(k)}B_k^T), k=0,1,\dots,K-1.
 \end{equation}
 注意到基于邻接关系的消息传递和邻域聚合（池化）是置换等变的；由此定义的图神经网络可以迁移到新的节点和新的图. 
 

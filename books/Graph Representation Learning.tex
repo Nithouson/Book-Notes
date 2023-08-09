@@ -21,13 +21,13 @@
 
 \par 稀疏图(sparse graph)：平均度远小于$N-1$. 大多数现实世界的网络都是稀疏图.
 
-\par 谱图论：无向图的Laplace矩阵定义为$L=D-A$，$A$, $D$分别为邻接矩阵和度矩阵，则$L$为对称半正定矩阵，最小特征值为0. 事实上，对于任意列向量$\mathbf{x}$，
+\par 谱图论：无向图的Laplace矩阵定义为$L=D-A$，$A$, $D$分别为邻接矩阵和度矩阵，则$L$为对称半正定矩阵，最小特征值为0 ($L\mathbf{1}=D\mathbf{1}-A\mathbf{1}=0$). 事实上，对于任意列向量$\mathbf{x}$，
 \begin{align}
 \mathbf{x}^TL\mathbf{x}&=\sum_{i=1}^N d_ix_i^2-\sum_{i=1}^N\sum_{j=1}^N a_{ij}x_ix_j\\
 &=\frac{1}{2}\left(\sum_{i=1}^N d_ix_i^2-2\sum_{i=1}^N\sum_{j=1}^N a_{ij}x_ix_j+\sum_{j=1}^N d_jx_j^2\right)\\
 &=\frac{1}{2}\left(\sum_{i=1}^N \sum_{j\neq i}a_{ij}(x_i-x_j)^2\right)
 \end{align}
-又有$L\mathbf{1}=D\mathbf{1}-A\mathbf{1}=0$。上述结论对归一化图拉普拉斯(renormalized graph Laplacian)矩阵$\hat{L}=I-D^{-1/2}AD^{-1/2}$仍然成立\footnote{GCN中使用的版本取$\tilde{A}=A+I$，并基于此计算度矩阵和Laplacian。注意到上述证明不限制图中的自环，从而结论仍成立。}。类似可以证明$D+A$以及$I+D^{-1/2}AD^{-1/2}$也是对称半正定的\footnote{与Laplacian的情形相比，差的平方变为和的平方，若有自环还会多出$2\sum_{i=1}^N a_{ii}x_i^2$一项。}，从而$D^{-1/2}AD^{-1/2}$（及其方幂）的特征值均在$[-1,1]$，且最大特征值为1。
+上述结论对矩阵$I-D^{-1/2}AD^{-1/2}$仍然成立。类似可以证明$D+A$以及$I+D^{-1/2}AD^{-1/2}$也是对称半正定的\footnote{与Laplacian的情形相比，差的平方变为和的平方，若有自环还会多出$2\sum_{i=1}^N a_{ii}x_i^2$一项。}，从而$D^{-1/2}AD^{-1/2}$（及其方幂）的特征值均在$[-1,1]$，且最大特征值为1\footnote{GCN中使用的版本取$\tilde{A}=A+I$，并基于此计算度矩阵$\tilde{D}$和重归一化图拉普拉斯(renormalized graph Laplacian)矩阵$\hat{L}=\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}$。注意到上述证明不限制图中的自环，从而结论仍成立。}。
 
 \section{特征提取}
 

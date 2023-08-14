@@ -123,6 +123,47 @@ CSR假设下近似有$(G-1)I \sim \chi_{G-1}^2$\footnote{当$G>6$且$\lambda\ver
 \end{align}
 若两组空间点来自同一个点过程，则交叉K函数为$\pi d^2$.
 
+\section{空间回归分析}
+
+\par 经典线性回归本质上是非空间的，用于空间数据时残差往往具有正空间自相关。误差项之间不独立使得OLS估计不再是有效的，统计推断也不能如常进行。建模非独立误差项的两种思路：(1)考虑误差项的空间自相关（空间滞后模型，Kriging回归）；(2)建模误差项的空间趋势（半参数平滑法）。
+\par \textbf{一般框架}：模型记为
+\begin{equation}
+\mathbf{y}=X\boldsymbol{\beta}+\boldsymbol{\epsilon},\ \boldsymbol{\epsilon}\sim \mathcal{N}(0,C)
+\end{equation}
+$C$为任意协方差矩阵；误差不独立意味着$C$不是对角矩阵。若$C$已知，则有最大似然估计
+\begin{equation}
+    \hat{\boldsymbol{\beta}}=(X^{T}CX)^{-1}X^{\mathrm{T}} C\mathbf{y}
+\end{equation}
+但$C$一般需要从样本数据中求出。
+
+\par \textbf{空间自回归模型}(Spatial Autoregressive Model):
+\begin{equation}
+\mathbf{y}=\rho W \mathbf{y}+ X\boldsymbol{\beta}+\boldsymbol{\epsilon}
+\end{equation}
+其中$W$是行标准化的空间权重矩阵。上式可变形为
+\begin{equation}
+    \mathbf{y}=(I-\rho W)^{-1}X\boldsymbol{\beta}+(I-\rho W)^{-1}\boldsymbol{\epsilon}
+\end{equation}
+令$X'=(I-\rho W)^{-1}X$, $\boldsymbol{\epsilon}'=(I-\rho W)^{-1}\boldsymbol{\epsilon}$, 则变换后误差协方差矩阵为
+\begin{equation}
+    C = \sigma^2 (I-\rho W)^{-1}[(I-\rho W)^{-1})]^T
+\end{equation}
+采用最大似然法估计模型参数。
+
+\par \textbf{空间误差模型}(Spatial Error Model)\footnote{原文称为“空间滑动平均模型”}:
+\begin{equation}
+\mathbf{y}=X\boldsymbol{\beta}+\mathbf{u},\ \mathbf{u}=\rho W\mathbf{u}+\boldsymbol{\epsilon}
+\end{equation}
+上式可变换为
+\begin{equation}
+(I-\rho W)\mathbf{y}=(I-\rho W)X\boldsymbol{\beta}+\boldsymbol{\epsilon}
+\label{eq:semm}
+\end{equation}
+参数估计步骤为：(1)先视为经典线性，利用OLS估计得到初始系数$\boldsymbol{\beta}$; (2)计算残差，对残差估计自回归模型得到$\rho$; (3)利用式(\ref{eq:semm})和$\rho$值重新估计$\boldsymbol{\beta}$; (4)重复(2)-(3)直至收敛。
+
+\par \textbf{Kriging回归}
+
+\par \textbf{半参数平滑法}
 
 \section{局部分析}
 

@@ -125,7 +125,8 @@ CSR假设下近似有$(G-1)I \sim \chi_{G-1}^2$\footnote{当$G>6$且$\lambda\ver
 
 \section{空间回归分析}
 
-\par 经典线性回归本质上是非空间的，用于空间数据时残差往往具有正空间自相关。误差项之间不独立使得OLS估计不再是有效的，统计推断也不能如常进行。建模非独立误差项的两种思路：(1)考虑误差项的空间自相关（空间滞后模型，Kriging回归）；(2)建模误差项的空间趋势（半参数平滑法）。
+\par 经典线性回归本质上是非空间的，用于空间数据时残差往往具有正空间自相关。误差项之间不独立使得OLS估计不再是有效的，统计推断也不能如常进行。建模非独立误差项的两种思路：(1)考虑误差项的空间自相关（空间滞后模型，Kriging回归）；(2)建模误差项的空间趋势（半参数平滑法）。对(1)而言，这些方法给出的回归系数置信区间没有考虑空间权重矩阵（空间相关函数）的不确定性。
+
 \par \textbf{一般框架}：模型记为
 \begin{equation}
 \mathbf{y}=X\boldsymbol{\beta}+\boldsymbol{\epsilon},\ \boldsymbol{\epsilon}\sim \mathcal{N}(0,C)
@@ -133,6 +134,7 @@ CSR假设下近似有$(G-1)I \sim \chi_{G-1}^2$\footnote{当$G>6$且$\lambda\ver
 $C$为任意协方差矩阵；误差不独立意味着$C$不是对角矩阵。若$C$已知，则有最大似然估计
 \begin{equation}
     \hat{\boldsymbol{\beta}}=(X^{T}CX)^{-1}X^{\mathrm{T}} C\mathbf{y}
+\label{eq:arbcmle}
 \end{equation}
 但$C$一般需要从样本数据中求出。
 
@@ -159,11 +161,28 @@ $C$为任意协方差矩阵；误差不独立意味着$C$不是对角矩阵。�
 (I-\rho W)\mathbf{y}=(I-\rho W)X\boldsymbol{\beta}+\boldsymbol{\epsilon}
 \label{eq:semm}
 \end{equation}
-参数估计步骤为：(1)先视为经典线性，利用OLS估计得到初始系数$\boldsymbol{\beta}$; (2)计算残差，对残差估计自回归模型得到$\rho$; (3)利用式(\ref{eq:semm})和$\rho$值重新估计$\boldsymbol{\beta}$; (4)重复(2)-(3)直至收敛。
+参数估计步骤为：(1)先视为经典线性回归，利用OLS估计得到初始系数$\boldsymbol{\beta}$; (2)计算残差，对残差估计自回归模型得到$\rho$; (3)利用式(\ref{eq:semm})和$\rho$值重新估计$\boldsymbol{\beta}$; (4)重复(2)-(3)直至收敛。
 
-\par \textbf{Kriging回归}
+\par \textbf{Kriging回归}: 先视为经典线性回归，利用OLS估计得到初始系数$\boldsymbol{\beta}$，然后对残差拟合半变异函数$g(d)$，由此可得到误差的协方差矩阵$C$，并用式(\ref{eq:arbcmle})重新估计$\boldsymbol{\beta}$。事实上，
+\begin{equation}
+    g(d_{ij})=\frac{1}{2}\mathrm{E}(e_i-e_j)^2=\sigma^2-\operatorname{Cov}(e_i,e_j)=\sigma^2-c_{ij}
+\end{equation}
+其中$\sigma^2$是基台值(Sill)，即半变异函数的渐近上界。
 
-\par \textbf{半参数平滑法}
+\par \textbf{半参数平滑法}:
+\begin{equation}
+    y_i=f(u_i,v_i)+\sum_j \beta_jx_{ij}+\epsilon_j
+\end{equation}
+其中$f$模拟误差的空间变化，由各样本点的残差根据距离衰减的核函数加权得到。矩阵形式为
+\begin{equation}
+\mathbf{y}=\mathbf{f}+X\boldsymbol{\beta}+\boldsymbol{\epsilon}, \ \mathbf{f}=W(\mathbf{y}-X\boldsymbol{\beta})
+\end{equation}
+对前一式用OLS估计，再代入后一式，得\footnote{若直接联立上述两式，则得到类似于空间误差模型的形式：$(I-W)\mathbf{y}=(I- W)X\boldsymbol{\beta}+\boldsymbol{\epsilon}$}
+\begin{equation}
+    \hat{\boldsymbol{\beta}}=(X^T(I-W)X)^{-1}X^T(I-W)\mathbf{y}
+\end{equation}
+其中带宽参数可采用广义交叉验证(Generalized Cross-Validation)选取。
+
 
 \section{局部分析}
 
@@ -188,3 +207,11 @@ $C$为任意协方差矩阵；误差不独立意味着$C$不是对角矩阵。�
     p_{ik}=\frac{S_k^\alpha d_{ik}^{-\beta}}{\sum_j S_j^\alpha d_{ij}^{-\beta}}
 \end{equation}
 全局模型对参数$\alpha,\beta$作全局估计，也可对每个起点分别估计模型，得到参数的空间变化。
+
+\section{空间数据统计推断}
+
+\par 推断指基于可观测的相关信息对未观测的信息所作的陈述。推断方法大致可分为非形式推断（包括探索性数据分析、可视化、聚类分析等）和形式推断（包括经典统计推断、贝叶斯推断）。
+
+\par 经典统计推断中的假设检验有时受到批评，如在$\theta$真实值很接近0时，若样本量足够大，$\theta=0$的零假设也会被拒绝。贝叶斯推断的争议主要在于先验分布的主观性，即可以根据预设结论调整先验；尽管在一定条件下当数据量足够大时，结果对先验选择不敏感。
+
+\par 假设检验之间不相互独立给多重假设检验校正带来进一步的困难。可能的解决方案是考虑高维空间中的置信域（或贝叶斯统计中的多元后验分布）。

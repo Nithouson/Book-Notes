@@ -215,3 +215,50 @@ $C$为任意协方差矩阵；误差不独立意味着$C$不是对角矩阵。�
 \par 经典统计推断中的假设检验有时受到批评，如在$\theta$真实值很接近0时，若样本量足够大，$\theta=0$的零假设也会被拒绝。贝叶斯推断的争议主要在于先验分布的主观性，即可以根据预设结论调整先验；尽管在一定条件下当数据量足够大时，结果对先验选择不敏感。
 
 \par 假设检验之间不相互独立给多重假设检验校正带来进一步的困难。可能的解决方案是考虑高维空间中的置信域（或贝叶斯统计中的多元后验分布）。
+
+\section{空间交互模型}
+\par 空间交互模型的发展可分为四个阶段：
+\par \textbf{社会物理学阶段（1860-1970）}：Carey和Ravenstein指出城市间人口流动类似物体间的引力，因而出现了类比万有引力的重力模型：
+\begin{equation}
+    T_{ij}=k\frac{P_i^\alpha P_j^\gamma}{d_{ij}^\beta}
+\end{equation}
+其中$\alpha,\gamma$反映了空间流动与规模的待估关系；$\beta$建模了距离衰减作用对不同类型交互、不同地区的可能变化。上式的规模可扩展为一系列属性（方幂）的乘积，并用取对数最小二乘拟合参数。
+
+\par \textbf{统计力学阶段（20世纪70年代）}：Wilson利用最大熵推导了空间交互模型族。设总交互量为$T$，熵定义为
+\begin{equation}
+    H=-\sum_{i,j}{\frac{T_{ij}}{T}\ln\frac{T_{ij}}{T}}
+\end{equation}
+无约束时交互量均匀分布于各边熵最大。Wilson引入一系列约束，不同约束组合分别推导出前述无约束、下述产出约束、吸引约束重力模型：
+\begin{align}
+    T_{ij}&=O_i P_j^{\gamma}d_{ij}^{-\beta}/\sum_k P_k^{\gamma}d_{ik}^{-\beta}\\
+    T_{ij}&=D_j P_i^{\alpha}d_{ij}^{-\beta}/\sum_k P_k^{\alpha}d_{kj}^{-\beta}
+\end{align}
+以及双约束重力模型
+\begin{align}
+    T_{ij}&=A_iO_iB_jD_jd_{ij}^{-\beta}\\
+    A_i &= \left(\sum_j B_jD_jd_{ij}^{-\beta}\right)^{-1}\\
+    B_j &= \left(\sum_i A_iO_id_{ij}^{-\beta}\right)^{-1}
+\end{align}
+批评认为最大熵模型只是用统计力学的物理类比代替万有引力的物理类比，仍没有反映个体的空间决策过程；其部分约束条件也缺乏合理性。
+
+\par \textbf{非空间信息处理阶段（20世纪80年代）}：MacFadden提出离散选择模型，根据目的地属性分配出发点$i$的流量。设目的地$j$的效用为$U_{ij}=V_{ij}+\mu_{ij}$，其中$V_{ij}$是可观测的部分，则选择目的地$j$的概率
+\begin{equation}
+    p_{ij}=P(U_{ij}>U_{ik}, \forall k \neq j)
+\end{equation}
+在一定条件下，有$p_{ij}=\exp{V_{ij}}/\sum_k \exp{V_{ik}}$。再令$V_{ij}\propto (\alpha \ln P_j)(-\beta \ln d_{ij})$，即得产出约束重力模型。这一模型限制了两个备选项概率之比不受其它选项影响；且新增目的地总会使其它选项概率降低（实际集聚效应可能导致其它选项概率升高）。
+
+\par \textbf{空间信息处理阶段（20世纪90年代以来）}：Fotheringham提出了竞争目的地模型，基于人处理信息容量的有限性，假设人首先确定目的地的备选集，再从中选取目的地。具体而言，在模型中加入每个目的地进入备选集$M$的可能性度量，分配模型变为\begin{equation}
+    p_{ij}=\frac{\exp{V_{ij}} \cdot l_i(j\in M)}{\sum_k \exp{V_{ik}} \cdot l_i(k\in M)}
+\end{equation}
+可能性度量的一种形式是利用可达性度量其它目的地的竞争效应：
+\begin{equation}
+    l_i(j\in M)= \left(\sum_{k\neq j}P_k^\alpha/d_{kj}^\beta\right)^\delta
+\end{equation}
+$\delta$一般为负，若为正，代表集聚效应。
+
+\section{前景与展望}
+
+\par 空间数据分析面临的挑战包括可变面状单元问题，分析结果依赖邻近关系（权重矩阵）的定义等。未来研究方向包括地理加权思想的扩展，贝叶斯推断的应用，时空相互作用（事件发生的时间、地点是否相互独立）等。
+
+\par 感知或认知距离不太可能遵循欧氏几何规则。
+

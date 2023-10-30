@@ -205,7 +205,7 @@ H^{(k+1)}=\sigma(D^{-1}AH^{(k)}W_k^T+H^{(k)}B_k^T), k=0,1,\dots,K-1.
 \begin{equation}
     e_{vu}=a(W_l h_v^{(l-1)},W_l h_u^{(l-1)}),
 \end{equation}
-$e_{vu}$归一化得到$a_{vu}$，使$\sum_{u\in N(v)}a_{vu}=1$. $a$的形式可以自由设定（如输入拼接消息的单隐层神经网络），其参数随权重矩阵$W$一起训练. 使用多头注意力(multi-head attention)时，同时训练多个注意力函数$a_i$，使用每个注意力函数分别计算表示向量$h_v^{(l)}[i]$，最后将表示向量聚合。
+$e_{vu}$归一化得到$a_{vu}$，使$\sum_{u\in N(v)}a_{vu}=1$. $a$的形式可以自由设定（如输入拼接消息的单隐层神经网络），其参数随权重矩阵$W$一起训练\footnote{若图中$(u,v)$边有属性信息$r_{vu}$，也可以在函数$a$中加入参数$V_lr_{vu}$，其中$V_l$为可训练参数。参见Liu et al., Learning Geo-Contextual Embeddings for Commuting Flow Prediction, AAAI 2020.}。使用多头注意力(multi-head attention)时，同时训练多个注意力函数$a_i$，使用每个注意力函数分别计算表示向量$h_v^{(l)}[i]$，最后将表示向量聚合。
 
 \par \textbf{与其它神经网络的关系}：CNN可以视为邻域节点数量和排序固定的GNN，$n\times n$卷积对应$n^2$个不同图卷积参数矩阵；Transformer可以视为全连接的单词图(word graph)上的GNN.
 
